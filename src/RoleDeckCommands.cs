@@ -77,13 +77,27 @@ public class SlashRename
                 AddRolesToList(RoleLists[i], RoleList);
             }
             Service.Game.Sim.simulation.ClearRoleDeck();
-            Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
+            //There are issues with this approach, until they are fixed we need to send them individually
+            //Doing it that way avoids an issue that WILL GET YOUR ACCOUNT SUSPENDED IF YOU ABUSE IT.
+            //Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
+            foreach (Role role in Roles)
+            {
+                Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
+            }
+            foreach (Role role in Bans)
+            {
+                Service.Game.Sim.simulation.AddBannedRoleToRoleDeck(role);
+            }
+            foreach (Role role in Modifiers)
+            {
+                Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
+            }
             return new Tuple<bool, string>(true, null);
         }
 
         public string GetHelpMessage()
         {
-            return "Control the role deck list for a Custom game. Usage example: /rolelist (role ids separated by spaces)";
+            return "Import a custom role list! the format as follows [list of role tags separated by commas];[list of role tags to ban separated by commas];[list of modifier ids separated by commas]";
         }
     }
 }
