@@ -20,12 +20,12 @@ public class SlashRename
 {
     public static void Start()
     {
-        CommandRegistry.AddCommand(new RenameCommand("rolelist", ["rl"]));
+        CommandRegistry.AddCommand(new ImportCommand("rolelist", ["rl"]));
     }
 
-    public class RenameCommand : Command, IHelpMessage
+    public class ImportCommand : Command, IHelpMessage
     {
-        public RenameCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
+        public ImportCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
         {
         }
 
@@ -76,7 +76,7 @@ public class SlashRename
                 }
                 AddRolesToList(RoleLists[i], RoleList);
             }
-
+            Service.Game.Sim.simulation.ClearRoleDeck();
             Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
             return new Tuple<bool, string>(true, null);
         }
