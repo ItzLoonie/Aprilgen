@@ -9,6 +9,9 @@ using Server.Shared.Extensions;
 using Server.Shared.State;
 using Server.Shared.Info;
 using Game.Simulation;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
+using System.Data;
 
 namespace RoleDeckCommands;
 
@@ -26,43 +29,55 @@ public class SlashRename
         {
         }
 
+        private static void AddRolesToList(string rolestr, List<Role> list)
+        {
+            List<string> Roles = new(rolestr.Split(','));
+            foreach (string role in Roles)
+            {
+                string rolenum = Regex.Replace(role, "[^0-9]", "");
+                if (byte.TryParse(rolenum, out byte roleid))
+                {
+                    list.Add((Role)roleid);
+                }
+            }
+        }
         public override Tuple<bool, string> Execute(string[] args)
         {
-            if (args.Length < 1) return new Tuple<bool, string>(false, "Usage example: /rolelist (role ids separated by commas) (banned role ids separated by commas) (");
+            if (args.Length < 1) return new Tuple<bool, string>(false, "Usage example: /rolelist (role tags separated by commas);(bans separated by commas);(modifiers separated by commas)");
+           
+            //join them
+            string RoleListArg = string.Join("", args);
+            List<string> RoleLists = new(RoleListArg.Split(";"));
+
+            //RoleLists[0] is roles
+            //RoleLists[1] is bans
+            //RoleLists[3] is modifiers
             List<Role> Roles = new();
             List<Role> Bans = new();
-            List<Role> HostOptions = new();
-            foreach (string role in args[0].Split(','))
+            List<Role> Modifiers = new();
+            
+            for (int i = 0; i < RoleLists.Count; i++)
             {
-                if (byte.TryParse(role, out byte RoleID))
+                List<Role> RoleList;
+                switch (i)
                 {
-                    Roles.Add((Role)RoleID);
+                    case 0:
+                        RoleList = Roles;
+                        break;
+                    case 1:
+                        RoleList = Bans;
+                        break;
+                    case 2:
+                        RoleList = Modifiers;
+                        break;
+                    default:
+                        RoleList = Modifiers;
+                        break;
                 }
+                AddRolesToList(RoleLists[i], RoleList);
             }
 
-            if (args.Length > 1)
-            {
-                foreach (string role in args[1].Split(','))
-                {
-                    if (byte.TryParse(role, out byte RoleID))
-                    {
-                        Bans.Add((Role)RoleID);
-                    }
-                }
-            }
-
-            if (args.Length > 2)
-            {
-                foreach (string role in args[2].Split(','))
-                {
-                    if (byte.TryParse(role, out byte RoleID))
-                    {
-                        HostOptions.Add((Role)RoleID);
-                    }
-                }
-            }
-
-            Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, HostOptions);
+            Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
             return new Tuple<bool, string>(true, null);
         }
 
