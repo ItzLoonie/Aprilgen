@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace RoleDeckCommands;
 
+// TODO: add some sort of thing on the start of the string which controls whether the list is in base or btos2
+// then make it convert between roles [and drop unavailable ones] if theyre used interchangably
+
 [Mod.SalemMod]
 public class RoleDeckCommands
 {
@@ -59,6 +62,7 @@ public class RoleDeckCommands
             List<string> Roles = new(rolestr.Split(','));
             foreach (string role in Roles)
             {
+                //allow using role tags instead, by removing all non-digit characters from the roles
                 string rolenum = Regex.Replace(role, "[^0-9]", "");
                 if (byte.TryParse(rolenum, out byte roleid))
                 {
@@ -69,7 +73,7 @@ public class RoleDeckCommands
         public override Tuple<bool, string> Execute(string[] args)
         {
             if (args.Length < 1) return new Tuple<bool, string>(false, "Usage example: /rolelist [role list exported with /exportlist]");
-           
+
             //join them
             string RoleListArg = string.Join("", args);
             List<string> RoleLists = new(RoleListArg.Split(";"));
@@ -102,9 +106,12 @@ public class RoleDeckCommands
                 AddRolesToList(RoleLists[i], RoleList);
             }
             Service.Game.Sim.simulation.ClearRoleDeck();
-            //There are issues with this approach, until they are fixed we need to send them individually
-            //Doing it that way avoids an issue that WILL GET YOUR ACCOUNT SUSPENDED IF YOU ABUSE IT.
-            //Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
+            // There are issues with this approach, until they are fixed we need to send them individually
+            // Doing it that way avoids an issue that WILL GET YOUR ACCOUNT SUSPENDED IF YOU ABUSE IT.
+            // Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
+
+            // Hacky quick fix instead bc im BUSY
+            // I checked and this avoids the issue in both base game and btos2 :)
             foreach (Role role in Roles)
             {
                 Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
