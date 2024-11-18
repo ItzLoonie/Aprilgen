@@ -1,10 +1,10 @@
 {
     "HarmonyId": "enderspearl184.roledeckcommands",
-    "DisplayName": "/rolelist",
+    "DisplayName": "Role List Commands",
     "Authors": [
       "Enderspearl184"
     ],
-    "Description": "Quickly import a Custom role list!",
+    "Description": "Adds /rolelist and /exportlist commands to easily share and import Custom role lists!",
     "Version": "1.0.0",
     "RequiredMods": [
       "voidbehemoth.commandlib"

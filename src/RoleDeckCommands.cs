@@ -1,28 +1,53 @@
 ﻿using SML;
 using System;
 using CommandLib.API;
-using CommandLib;
 using System.Collections.Generic;
 using Services;
-using UnityEngine;
-using Server.Shared.Extensions;
 using Server.Shared.State;
-using Server.Shared.Info;
-using Game.Simulation;
-using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
-using System.Data;
+using System.Linq;
+using UnityEngine;
 
 namespace RoleDeckCommands;
 
 [Mod.SalemMod]
-public class SlashRename
+public class RoleDeckCommands
 {
     public static void Start()
     {
         CommandRegistry.AddCommand(new ImportCommand("rolelist", ["rl"]));
+        CommandRegistry.AddCommand(new ExportCommand("exportlist", ["el"]));
     }
+    public class ExportCommand : Command, IHelpMessage
+    {
+        public ExportCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
+        {
+        }
+        public override Tuple<bool, string> Execute(string[] args)
+        {
+            string roleListData = "";
 
+            RoleDeckBuilder RoleDeck = Service.Game.Sim.simulation.roleDeckBuilder;
+
+            //make string to copy in the proper format
+            //convert the Role enums to Role IDs and then to strings :)
+            string[] roles = RoleDeck.roles.Select(i => ((byte)i).ToString()).ToArray();
+            string[] bans = RoleDeck.bannedRoles.Select(i => ((byte)i).ToString()).ToArray();
+            string[] modifiers = RoleDeck.modifierCards.Select(i => ((byte)i).ToString()).ToArray();
+            roleListData += string.Join(",", roles) + ";";
+            roleListData += string.Join(",", bans) + ";";
+            roleListData += string.Join(",", modifiers);
+
+            //copy to clipboard
+            GUIUtility.systemCopyBuffer = roleListData;
+            return new Tuple<bool, string>(true, null);
+        }
+
+        public string GetHelpMessage()
+        {
+            return "Exports the current role list to your clipboard!";
+        }
+    }
     public class ImportCommand : Command, IHelpMessage
     {
         public ImportCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
@@ -43,7 +68,7 @@ public class SlashRename
         }
         public override Tuple<bool, string> Execute(string[] args)
         {
-            if (args.Length < 1) return new Tuple<bool, string>(false, "Usage example: /rolelist (role tags separated by commas);(bans separated by commas);(modifiers separated by commas)");
+            if (args.Length < 1) return new Tuple<bool, string>(false, "Usage example: /rolelist [role list exported with /exportlist]");
            
             //join them
             string RoleListArg = string.Join("", args);
