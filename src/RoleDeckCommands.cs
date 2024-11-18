@@ -135,13 +135,9 @@ public class RoleDeckCommands
                 }
                 AddRolesToList(RoleLists[i], RoleList, isModded, isRoleListModded);
             }
-            Service.Game.Sim.simulation.ClearRoleDeck();
-            // There are issues with this approach, until they are fixed we need to send them individually
-            // Doing it that way avoids an issue that WILL GET YOUR ACCOUNT SUSPENDED IF YOU ABUSE IT.
-            // Service.Game.Sim.simulation.SendFullRoleDeck(Roles, Bans, Modifiers);
 
-            // Hacky quick fix instead bc im BUSY
-            // I checked and this avoids the issue in both base game and btos2 :)
+            // clear the role deck and add each role!
+            Service.Game.Sim.simulation.ClearRoleDeck();
             foreach (Role role in Roles)
             {
                 Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
