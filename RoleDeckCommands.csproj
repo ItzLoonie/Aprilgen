@@ -41,6 +41,10 @@
     <Reference Include="Assembly-CSharp" Publicize="true">
       <HintPath>.\libs\Assembly-CSharp.dll</HintPath>
     </Reference>
+
+	<Reference Include="BetterTOS2" Publicize="true">
+		<HintPath>.\libs\BetterTOS2.dll</HintPath>
+	</Reference>
     
     <Reference Include="UnityEngine">
       <HintPath>.\libs\UnityEngine.dll</HintPath>

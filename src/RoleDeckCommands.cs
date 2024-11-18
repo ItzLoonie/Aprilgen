@@ -7,7 +7,6 @@ using Server.Shared.State;
 using System.Text.RegularExpressions;
 using System.Linq;
 using UnityEngine;
-
 namespace RoleDeckCommands;
 
 // TODO: add some sort of thing on the start of the string which controls whether the list is in base or btos2
@@ -31,7 +30,6 @@ public class RoleDeckCommands
             string roleListData = "";
 
             RoleDeckBuilder RoleDeck = Service.Game.Sim.simulation.roleDeckBuilder;
-
             //make string to copy in the proper format
             //convert the Role enums to Role IDs and then to strings :)
             string[] roles = RoleDeck.roles.Select(i => ((byte)i).ToString()).ToArray();
@@ -41,6 +39,15 @@ public class RoleDeckCommands
             roleListData += string.Join(",", bans) + ";";
             roleListData += string.Join(",", modifiers);
 
+            //if playing in BTOS2 add a B to the start of the string
+            if (ModStates.IsLoaded("curtis.tuba.better.tos2"))
+            {
+                Debug.Log("BTOS LOADED IN /EXPORTLIST");
+                if (BTOSChecker.CheckBTOSIsModded())
+                {
+                    roleListData = "B" + roleListData;
+                }
+            }
             //copy to clipboard
             GUIUtility.systemCopyBuffer = roleListData;
             return new Tuple<bool, string>(true, null);
@@ -57,7 +64,7 @@ public class RoleDeckCommands
         {
         }
 
-        private static void AddRolesToList(string rolestr, List<Role> list)
+        private static void AddRolesToList(string rolestr, List<Role> list, bool isModded, bool isRoleListModded)
         {
             List<string> Roles = new(rolestr.Split(','));
             foreach (string role in Roles)
@@ -66,7 +73,21 @@ public class RoleDeckCommands
                 string rolenum = Regex.Replace(role, "[^0-9]", "");
                 if (byte.TryParse(rolenum, out byte roleid))
                 {
-                    list.Add((Role)roleid);
+                    if (isModded != isRoleListModded)
+                    {
+                        if (isModded)
+                        {
+                            roleid = RoleConverter.ConvertBaseToBTOS(roleid);
+                        } else
+                        {
+                            roleid = RoleConverter.ConvertBTOSToBase(roleid);
+                        }
+                    }
+                    //RoleConverter returns 0 when the role doesnt exist in the specified environment.
+                    if (roleid != 0)
+                    {
+                        list.Add((Role)roleid);
+                    }
                 }
             }
         }
@@ -84,6 +105,15 @@ public class RoleDeckCommands
             List<Role> Roles = new();
             List<Role> Bans = new();
             List<Role> Modifiers = new();
+
+            bool isModded = false;
+            bool isRoleListModded = RoleListArg.StartsWith("B");
+
+            if (ModStates.IsLoaded("curtis.tuba.better.tos2"))
+            {
+                Debug.Log("BTOS LOADED IN /ROLELIST");
+                isModded = BTOSChecker.CheckBTOSIsModded();
+            }
             
             for (int i = 0; i < RoleLists.Count; i++)
             {
@@ -103,7 +133,7 @@ public class RoleDeckCommands
                         RoleList = Modifiers;
                         break;
                 }
-                AddRolesToList(RoleLists[i], RoleList);
+                AddRolesToList(RoleLists[i], RoleList, isModded, isRoleListModded);
             }
             Service.Game.Sim.simulation.ClearRoleDeck();
             // There are issues with this approach, until they are fixed we need to send them individually
