@@ -5,7 +5,7 @@
       "Enderspearl184"
     ],
     "Description": "Adds /rolelist and /exportlist commands to easily share and import Custom role lists!",
-    "Version": "1.0.1",
+    "Version": "1.0.2",
     "RequiredMods": [
       "voidbehemoth.commandlib"
     ],

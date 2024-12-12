@@ -40,13 +40,10 @@ public class RoleDeckCommands
             roleListData += string.Join(",", modifiers);
 
             //if playing in BTOS2 add a B to the start of the string
-            if (ModStates.IsLoaded("curtis.tuba.better.tos2"))
+            if (BTOSChecker.CheckBTOSIsModded())
             {
-                Debug.Log("BTOS LOADED IN /EXPORTLIST");
-                if (BTOSChecker.CheckBTOSIsModded())
-                {
-                    roleListData = "B" + roleListData;
-                }
+                Debug.Log("BTOS GAME IN /EXPORTLIST");
+                roleListData = "B" + roleListData;
             }
             //copy to clipboard
             GUIUtility.systemCopyBuffer = roleListData;
@@ -77,9 +74,11 @@ public class RoleDeckCommands
                     {
                         if (isModded)
                         {
+                            Debug.Log("Using ConvertBaseToBTOS converter.");
                             roleid = RoleConverter.ConvertBaseToBTOS(roleid);
                         } else
                         {
+                            Debug.Log("Using ConvertBTOSToBase converter.");
                             roleid = RoleConverter.ConvertBTOSToBase(roleid);
                         }
                     }
@@ -106,13 +105,12 @@ public class RoleDeckCommands
             List<Role> Bans = new();
             List<Role> Modifiers = new();
 
-            bool isModded = false;
+            bool isModded = BTOSChecker.CheckBTOSIsModded();
             bool isRoleListModded = RoleListArg.StartsWith("B");
 
-            if (ModStates.IsLoaded("curtis.tuba.better.tos2"))
+            if (isModded)
             {
-                Debug.Log("BTOS LOADED IN /ROLELIST");
-                isModded = BTOSChecker.CheckBTOSIsModded();
+                Debug.Log("BTOS GAME IN /ROLELIST");
             }
             
             for (int i = 0; i < RoleLists.Count; i++)
@@ -136,19 +134,30 @@ public class RoleDeckCommands
                 AddRolesToList(RoleLists[i], RoleList, isModded, isRoleListModded);
             }
 
+            // Four Horseman check for base game
+            if (!isModded && RoleConverter.NeedsFourHorseman(Roles) && !Modifiers.Contains(Role.FOUR_HORSEMEN))
+            {
+                Debug.Log("Four Horseman modifier needed! Adding to start of modifiers list.");
+                Modifiers.Insert(0, Role.FOUR_HORSEMEN);
+            }
+
             // clear the role deck and add each role!
             Service.Game.Sim.simulation.ClearRoleDeck();
+
+            // Add modifiers first, because of Four Horseman in base game.
+            foreach (Role role in Modifiers)
+            {
+                Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
+            }
+
             foreach (Role role in Roles)
             {
                 Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
             }
+
             foreach (Role role in Bans)
             {
                 Service.Game.Sim.simulation.AddBannedRoleToRoleDeck(role);
-            }
-            foreach (Role role in Modifiers)
-            {
-                Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
             }
             return new Tuple<bool, string>(true, null);
         }

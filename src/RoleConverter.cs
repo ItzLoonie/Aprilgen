@@ -1,14 +1,15 @@
 ﻿using Server.Shared.State;
 using BetterTOS2;
+using System.Collections.Generic;
 public class RoleConverter
 {
     public static byte ConvertBTOSToBase(byte role) => role switch
     {
-        //I can't reference RolePlus here because this code can be run in a non-btos2 state
+        // Even though the compiler will just turn the RolePlus references into byte values, I don't want to rely
+        // on that to make sure BetterTOS2 isn't referenced in code that can be run in base game.
 
-        // these don't exist in base so they need to be given a bucket instead [except warlock->sc]
-        // oracle -> tp
-        61 => (byte)Role.TOWN_PROTECTIVE,
+        // these don't exist in base so they need to be given a bucket instead [except warlock->sc and inquisitor->pirate]
+        // BTOS pirate will just convert to pirate as well, because nothing acts exactly like it anymore and the role technically exists in base.
 
         // warlock -> sc
         62 => (byte)Role.SOULCOLLECTOR,
@@ -28,9 +29,9 @@ public class RoleConverter
         // judge -> neutral evil
         57 => (byte)Role.NEUTRAL_EVIL,
 
-        // inquisitor -> neutral evil
-        59 => (byte)Role.NEUTRAL_EVIL,
-        
+        // inquisitor -> pirate, mechanically the same now.
+        59 => (byte)Role.PIRATE,
+
         // neutral special -> random neutral
         120 => (byte)Role.RANDOM_NEUTRAL,
 
@@ -44,6 +45,9 @@ public class RoleConverter
 
         //marshal
         56 => (byte)Role.MARSHAL,
+
+        // oracle
+        61 => (byte)Role.ORACLE,
 
         // any/true any -> any
         101 => (byte)Role.ANY,
@@ -105,8 +109,8 @@ public class RoleConverter
         212 => 0,
         //teams -> void
         213 => 0,
-        //anon players -> void
-        214 => 0,
+        //anon players
+        214 => (byte)Role.ANON_PLAYERS,
         //walking dead -> void
         215 => 0,
         //egotist townie -> void
@@ -133,7 +137,11 @@ public class RoleConverter
         226 => 0,
         //secret whispers -> void
         227 => 0,
-        
+        //lovers -> void
+        228 => 0,
+        //vc lobby -> 0
+        229 => 0,
+
         // default case, just return the same role id
         _ => role,
     };
@@ -147,6 +155,12 @@ public class RoleConverter
 
         //marshal
         (byte)Role.MARSHAL => (byte)RolePlus.MARSHAL,
+
+        //oracle
+        (byte)Role.ORACLE => (byte)RolePlus.ORACLE,
+
+        //pirate -> inquisitor. mechanically the same now
+        (byte)Role.PIRATE => (byte)RolePlus.INQUISITOR,
 
         //any
         //maybe change to True Any bc pirate?
@@ -169,7 +183,7 @@ public class RoleConverter
         (byte)Role.TOWN_SUPPORT => (byte)RolePlus.TOWN_SUPPORT,
 
         //town power matches
-    
+
         //random coven
         (byte)Role.RANDOM_COVEN => (byte)RolePlus.RANDOM_COVEN,
 
@@ -178,7 +192,7 @@ public class RoleConverter
 
         //coven utility
         (byte)Role.COVEN_UTILITY => (byte)RolePlus.COVEN_UTILITY,
-        
+
         //coven deception
         (byte)Role.COVEN_DECEPTION => (byte)RolePlus.COVEN_DECEPTION,
 
@@ -201,7 +215,7 @@ public class RoleConverter
 
         //common coven
         (byte)Role.COMMON_COVEN => (byte)RolePlus.REGULAR_COVEN,
-                
+
         //vip matches
         //town traitor matches
         //ghost town matches
@@ -213,7 +227,28 @@ public class RoleConverter
         //hidden roles matches
         //one trial per day matches
 
+        //anon players
+        (byte)Role.ANON_PLAYERS => (byte)RolePlus.ANON_PLAYERS,
+
+        //four horseman -> void
+        (byte)Role.FOUR_HORSEMEN => 0,
+
         // default case, just return the same role id
         _ => role,
-  };
+    };
+
+    // With the Season 4 changes, this modifier is needed if more than 2 Neutral Apocalypse roles are in the role list.
+    public static bool NeedsFourHorseman(List<Role> Roles)
+    {
+        int HorsemanCount = 0;
+        foreach (Role role in Roles)
+        {
+            // Any role is ignored as it isn't always a horseman.
+            if (role == Role.SOULCOLLECTOR || role == Role.BAKER || role == Role.PLAGUEBEARER || role == Role.BERSERKER || role == Role.NEUTRAL_APOCALYPSE)
+            {
+                HorsemanCount++;
+            }
+        }
+        return HorsemanCount > 1;
+    }
 }
