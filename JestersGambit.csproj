@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard21</TargetFramework>
-    <AssemblyName>RoleDeckCommands</AssemblyName>
+    <AssemblyName>JestersGambit</AssemblyName>
     <Description>Commands to add to Custom role lists!</Description>
-    <RootNamespace>RoleDeckCommands</RootNamespace>
+    <RootNamespace>JestersGambit</RootNamespace>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
@@ -18,9 +18,6 @@
     <!--  SML GH Link  -->
 	  <SalemModLoaderLink>https://github.com/Curtbot9000/SalemModLoader/releases/latest/download/SalemModLoader.dll</SalemModLoaderLink>
   </PropertyGroup>
-
-  <!-- Steam Library Path -->
-  <Import Project="$(MSBuildThisFileDirectory)\SteamLibrary.targets"/>
 
   <ItemGroup>
     <EmbeddedResource Include="resources\modinfo.json" />
@@ -49,14 +46,6 @@
     <Reference Include="UnityEngine">
       <HintPath>.\libs\UnityEngine.dll</HintPath>
     </Reference>
-
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>.\libs\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-
-	<Reference Include="UnityEngine.IMGUIModule">
-		<HintPath>.\libs\UnityEngine.IMGUIModule.dll</HintPath>
-	</Reference>
 	  
 	<Reference Include="SalemModLoader">
       <HintPath>.\libs\SalemModLoader.dll</HintPath>

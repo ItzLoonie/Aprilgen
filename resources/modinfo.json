@@ -1,13 +1,22 @@
 {
-    "HarmonyId": "enderspearl184.roledeckcommands",
-    "DisplayName": "Role List Commands",
-    "Authors": [
-      "Enderspearl184"
-    ],
-    "Description": "Adds /rolelist and /exportlist commands to easily share and import Custom role lists!",
-    "Version": "1.0.2",
-    "RequiredMods": [
-      "voidbehemoth.commandlib"
-    ],
-    "Settings": {}
+    "HarmonyId": "loonie.jestersgambit",
+    "DisplayName": "Jester's Gambit",
+    "Authors": [ "Loonie" ],
+    "Description": "Adds randomized role list generation to Custom!",
+    "Version": "1.0.0",
+    "RequiredMods": [ "voidbehemoth.commandlib" ],
+    "Settings": {
+        "IntegerInputSettings":
+        [
+            {
+                "Name": "Role Bucket Chance",
+                "SettingID": "loonie.bucketchance",
+                "Description": "The chance of a role bucket being chosen instead of a role.",
+                "DefaultValue": 50,
+                "MinValue": 0,
+                "MaxValue": 100,
+                "AvailableInGame": true
+            }
+        ]
+    }
 }
