@@ -41,12 +41,8 @@ namespace JestersGambit
             CommandRegistry.AddCommand(new FullRandomCommand("randomall", new[] { "a", "r-all" }));
 
         }
-        public class RoleCommand : Command, IHelpMessage
+        public class RoleCommand(string name, string[] aliases = null, string harmonyId = null) : Command(name, aliases, harmonyId), IHelpMessage
         {
-            public RoleCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
-            {
-            }
-
             private const int MaxRoleCount = 15;
 
             private static readonly List<int> VanillaRoleIDs = [.. Enumerable.Range(1, 56)];
@@ -109,16 +105,12 @@ namespace JestersGambit
 
             public string GetHelpMessage()
             {
-                return "Adds up to 15 random valid roles to the role list.";
+                return "Format: /randomrole [roles] - Adds up to 15 random valid roles to the role list.";
             }
         }
 
-        public class ModifierCommand : Command, IHelpMessage
+        public class ModifierCommand(string name, string[] aliases = null, string harmonyId = null) : Command(name, aliases, harmonyId), IHelpMessage
         {
-            public ModifierCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
-            {
-            }
-
             private const int MaxModifierCount = 3;
 
             private static readonly List<int> VanillaModifierIDs = [.. Enumerable.Range(201, 14)];
@@ -167,16 +159,12 @@ namespace JestersGambit
 
             public string GetHelpMessage()
             {
-                return "Adds up to 3 random valid modifiers to the role list.";
+                return "Format: /randommodifier [modifiers] - Adds up to 3 random valid modifiers to the role list.";
             }
         }
 
-        public class BanCommand : Command, IHelpMessage
+        public class BanCommand(string name, string[] aliases = null, string harmonyId = null) : Command(name, aliases, harmonyId), IHelpMessage
         {
-            public BanCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
-            {
-            }
-
             private const int MaxBanCount = 3;
 
             private static readonly List<int> VanillaRoleIDs = [.. Enumerable.Range(1, 56)];
@@ -228,17 +216,13 @@ namespace JestersGambit
 
             public string GetHelpMessage()
             {
-                return "Bans up to 3 random valid roles from the role list.";
+                return "Format: /randomban [bans] - Bans up to 3 random valid roles from the role list.";
             }
         }
 
-        public class ClearCommand : Command, IHelpMessage
+        public class ClearCommand(string name, string[] aliases = null, string harmonyId = null) : Command(name, aliases, harmonyId), IHelpMessage
         {
-            public ClearCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
-            {
-            }
-
-            private static void ClearRoleDeck(Random rand)
+            public static void ClearRoleDeck()
             {
                 Service.Game.Sim.simulation.ClearRoleDeck();
 
@@ -249,7 +233,7 @@ namespace JestersGambit
             public override Tuple<bool, string> Execute(string[] args)
             {
                 {
-                    ClearRoleDeck(random);
+                    ClearRoleDeck();
                 }
 
                 return new Tuple<bool, string>(true, $"Reset role deck.");
@@ -257,16 +241,12 @@ namespace JestersGambit
 
             public string GetHelpMessage()
             {
-                return "Clears the role deck.";
+                return "Format: /clear - Clears the role deck.";
             }
         }
 
-        public class FullRandomCommand : Command, IHelpMessage
+        public class FullRandomCommand(string name, string[] aliases = null, string harmonyId = null) : Command(name, aliases, harmonyId), IHelpMessage
         {
-            public FullRandomCommand(string name, string[] aliases = null, string harmonyId = null) : base(name, aliases, harmonyId)
-            {
-            }
-
             public override Tuple<bool, string> Execute(string[] args)
             {
                 int modifiersMax = ModSettings.GetInt("Maximum Modifiers", "loonie.jestersgambit");
@@ -278,6 +258,8 @@ namespace JestersGambit
                 int roleCount = 15;
                 int modifierCount = random.Next(0, maxModifiers + 1);
                 int banCount = random.Next(0, maxBans + 1);
+
+                ClearCommand.ClearRoleDeck();
 
                 if (args.Length > 0 && int.TryParse(args[0], out int parsedRoles))
                     roleCount = Math.Clamp(parsedRoles, 1, 15);
@@ -297,8 +279,8 @@ namespace JestersGambit
                 for (int i = 0; i < banCount; i++)
                     BanCommand.BanRandomRoleFromDeck(random);
 
-                string[] titles = new string[]
-                {
+                string[] titles =
+                [
                     // Keywords
                     "Conjure", "Blood Ritual", "Doom", "Haunt", "Ignite", "Cautious", "Bite", "Convert", "Counter Claim",
                     "Crime", "Care", "Dreamweave", "Torment", "Magic Mirror", "Rapid Mode", "Ghost Town", "Build", "Rebecca",
@@ -362,7 +344,7 @@ namespace JestersGambit
                     "amogus", "April", "Revolution", "Steve", "Chicken", "Jockey", "Bater", "Water", "Horseman", "of",
                     "Wucket", "Bucket", "Release", "Flint", "and", "Steel", "Nether", "Dennis", "Hamburger", "Salem",
                     "Fire", "Thunder", "Hammer", "Jump", "High", "Spin", "Tickle"
-                };
+                ];
 
 
                 var shuffled = titles.OrderBy(x => random.Next()).ToArray();
@@ -370,7 +352,7 @@ namespace JestersGambit
                 string text2 = shuffled[1];
                 string text3 = shuffled[2];
 
-                Random r = new Random();
+                Random r = new();
                 int lobbyIcon = r.Next(0, 246); 
                 if (ModSettings.GetBool("Randomize Lobby Info", "loonie.jestersgambit")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
 
@@ -382,7 +364,7 @@ namespace JestersGambit
 
             public string GetHelpMessage()
             {
-                return "Adds random roles, modifiers, and bans at once.";
+                return "Format: /randomall [roles] [modifiers] [bans] - Sets a role deck with random roles, modifiers, and bans.";
             }
         }
 
