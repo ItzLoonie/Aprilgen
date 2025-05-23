@@ -269,22 +269,26 @@ namespace JestersGambit
 
             public override Tuple<bool, string> Execute(string[] args)
             {
+                int modifiersMax = ModSettings.GetInt("Maximum Modifiers", "loonie.jestersgambit");
+                int bansMax = ModSettings.GetInt("Maximum Bans", "loonie.jestersgambit");
+
+                int maxModifiers = !Utils.IsBTOS2() && modifiersMax > 3 ? 3 : modifiersMax;
+                int maxBans = !Utils.IsBTOS2() && bansMax > 3 ? 3 : bansMax;
+
                 int roleCount = 15;
-                int modCount = 1;
-                int banCount = 1;
+                int modifierCount = random.Next(0, maxModifiers + 1); // 0–5 inclusive
+                int banCount = random.Next(0, maxBans + 1);
 
-                if (args.Length >= 3)
-                {
-                    int.TryParse(args[0], out roleCount);
-                    int.TryParse(args[1], out modCount);
-                    int.TryParse(args[2], out banCount);
-                }
+                if (args.Length > 0 && int.TryParse(args[0], out int parsedRoles))
+                    roleCount = Math.Clamp(parsedRoles, 1, 15);
 
-                roleCount = Math.Clamp(roleCount, 1, 15);
-                modCount = Math.Clamp(modCount, 1, 3);
-                banCount = Math.Clamp(banCount, 1, 3);
+                if (args.Length > 1 && int.TryParse(args[1], out int parsedMods))
+                    modifierCount = Math.Clamp(parsedMods, 0, maxModifiers);
 
-                for (int i = 0; i < modCount; i++)
+                if (args.Length > 2 && int.TryParse(args[2], out int parsedBans))
+                    banCount = Math.Clamp(parsedBans, 0, maxBans);
+
+                for (int i = 0; i < modifierCount; i++)
                     ModifierCommand.AddRandomModifierToDeck(random);
 
                 for (int i = 0; i < roleCount; i++)
@@ -293,7 +297,8 @@ namespace JestersGambit
                 for (int i = 0; i < banCount; i++)
                     BanCommand.BanRandomRoleFromDeck(random);
 
-                return new Tuple<bool, string>(true, $"Attempted to add {modCount} modifiers, {roleCount} roles, and banned {banCount} roles.");
+                return new Tuple<bool, string>(true,
+                    $"Attempted to add {roleCount} roles, {modifierCount} modifiers, and ban {banCount} roles.");
             }
 
             public string GetHelpMessage()

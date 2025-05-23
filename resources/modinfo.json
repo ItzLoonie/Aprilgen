@@ -3,7 +3,7 @@
     "DisplayName": "Jester's Gambit",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "RequiredMods": [ "voidbehemoth.commandlib" ],
     "Settings": {
         "IntegerInputSettings":
@@ -16,7 +16,26 @@
                 "MinValue": 0,
                 "MaxValue": 100,
                 "AvailableInGame": true
+            },
+            {
+                "Name": "Maximum Modifiers",
+                "SettingID": "loonie.maxmodifiers",
+                "Description": "The maximum amount of modifiers that can be selected when using /randomall without values set.",
+                "DefaultValue": 3,
+                "MinValue": 1,
+                "MaxValue": 50,
+                "AvailableInGame": true
+            },
+            {
+                "Name": "Maximum Bans",
+                "SettingID": "loonie.maxbans",
+                "Description": "The maximum amount of bans that can be selected when using /randomall without values set.",
+                "DefaultValue": 3,
+                "MinValue": 1,
+                "MaxValue": 50,
+                "AvailableInGame": true
             }
+            
         ]
     }
 }
