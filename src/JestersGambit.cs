@@ -276,7 +276,7 @@ namespace JestersGambit
                 int maxBans = !Utils.IsBTOS2() && bansMax > 3 ? 3 : bansMax;
 
                 int roleCount = 15;
-                int modifierCount = random.Next(0, maxModifiers + 1); // 0–5 inclusive
+                int modifierCount = random.Next(0, maxModifiers + 1);
                 int banCount = random.Next(0, maxBans + 1);
 
                 if (args.Length > 0 && int.TryParse(args[0], out int parsedRoles))
@@ -297,9 +297,88 @@ namespace JestersGambit
                 for (int i = 0; i < banCount; i++)
                     BanCommand.BanRandomRoleFromDeck(random);
 
+                string[] titles = new string[]
+                {
+                    // Keywords
+                    "Conjure", "Blood Ritual", "Doom", "Haunt", "Ignite", "Cautious", "Bite", "Convert", "Counter Claim",
+                    "Crime", "Care", "Dreamweave", "Torment", "Magic Mirror", "Rapid Mode", "Ghost Town", "Build", "Rebecca",
+                    "Death Roll", "Death Guess", "Spread", "Perfect Town", "Slow Mode", "Fast Mode", "Anonymous Voting", "Secret Killers",
+                    "Hidden Roles", "One Trial", "Unique", "Murder", "Claim", "Town Elder", "No Crime", "Vote For Alignment",
+                    "Trespassing", "Unleash", "Curtis", "Group Lynch", "Aegis", "Shriek", "Deafen", "Smokebomb", "Audit", "L", "W",
+                    "Vanquish", "Inquire", "Heretic", "Recruit", "Assassinate", "Court", "Subpoena", "Daybreak", "Isolate", "Starbound",
+                    "Anon Players", "Town Traitor", "Necro Passing", "Teams", "Walking Dead", "Real", "Fake", "Snitch", "Compliant Killers",
+                    "Secret Whispers", "Speaking Spirits", "Pandora's Box", "Egotist Townie", "No Last Wills", "Immovable",
+                    "Individuality", "Unknown Obstacle", "Known Obstacle", "Curse", "Mass Hysteria", "Safe", "Drain", "Godframer",
+                    "Soul Swap", "Lovers", "VC Lobby", "Illuminated", "Load", "Camouflage", "Chatterbox", "Feelin' Lucky?", "Basic",
+                    "Powerful", "Unstoppable", "Ethereal", "Invincible", "Plague", "Stone Gaze", "Starve", "Investigate", "Duel",
+                    "Jail", "Rampage", "Control", "Trap", "Douse", "Hex", "Astral", "Necronomicon", "Stoned", "Harmful", "Armageddon",
+                    "Silence", "Enchant", "Illusion", "Insane", "Knight", "Hungover", "Roleblock", "Barrier", "Revealed", "Bestow",
+                    "Bread", "Poison", "Accompany", "Scurvy", "Good", "Evil", "Sus", "Not Sus", "Hang", "Hangman", "Vote", "Guilty",
+                    "Abstain", "Innocent", "Attack", "Defense", "Autopsy", "Protect", "Visit", "VIP", "Examine", "Watch", "Vision",
+                    "Gaze", "Intuit", "Search", "Bug", "Track", "Execute", "Prosecute", "Fortify", "Guard", "Shoot", "Alert",
+                    "Remember", "Raise", "Drink", "Retrain", "Reveal", "Sense", "Plunder", "Scour", "Party", "Guest List",
+                    "Propose", "Landlubber", "Insomnia",
+
+                    // Roles
+                    "Admirer", "Amnesiac", "Bodyguard", "Cleric", "Coroner", "Crusader", "Deputy", "Investigator", "Jailor",
+                    "Lookout", "Mayor", "Monarch", "Prosecutor", "Psychic", "Retributionist", "Seer", "Sheriff",
+                    "Spy", "Tavern Keeper", "Tracker", "Trapper", "Trickster", "Veteran", "Vigilante",
+                    "Conjurer", "Coven Leader", "Dreamweaver", "Enchanter", "Hex Master", "Illusionist", "Jinx",
+                    "Medusa", "Necromancer", "Poisoner", "Potion Master", "Ritualist", "Voodoo Master",
+                    "Wildling", "Witch",
+                    "Arsonist", "Baker", "Berserker", "Doomsayer", "Executioner", "Jester", "Pirate",
+                    "Plaguebearer", "Serial Killer", "Shroud", "Soul Collector", "Werewolf", "Vampire",
+                    "Cursed Soul", "Banshee", "Jackal", "Marshal", "Judge", "Auditor", "Inquisitor", "Starspawn",
+                    "Oracle", "Warlock", "Socialite", "War", "Famine", "Pestilence", "Death", "Stoned", "Hidden",
+
+                    // Factions
+                    "Town", "Coven", "Apocalypse", "Pandora", "Egotist", "Compliance", "Lovers", "Frogs", "Lions", "Hawks",
+
+                    // Skins
+                    "John", "Macy", "Deodat", "Mary", "Giles", "Jack", "Brokk", "Artemys", "Francisco", "Avery",
+                    "Jackie", "Davey", "Catherine", "Martha", "Samuel", "Liric", "Grim", "Blyte", "Bridget", "Lupin",
+                    "Vladimir", "Nikki", "Petra", "Thomas", "Rosemary", "Gerald", "Robert", "Shinrin", "Famine", "War",
+                    "Pestilence", "Betty", "Widow", "White Witch", "Coven Leader", "Husky", "Anubis", "Dusty", "Lockwood",
+                    "Shadow Wolf", "Sabrina", "Grave Digger", "Nevermore", "Headless Horseman", "Iron Chef", "Firebug",
+                    "Kande", "Odin", "Krampus", "Jekyll", "Hyde", "Clef", "Piper", "Archibald", "Lauf", "Giles Quarry", "Gorgon",
+                    "Radu", "Ivy", "Sun Wukong", "Duchess", "McBrains", "Joao", "Sister", "Tabitha", "Midknight", "Poisoner",
+                    "Summer", "Helsing", "Glinda", "Blueflame", "Hermes", "Sisyphus", "Zeus", "Spartan", "Pillarman",
+                    "Minotaur", "Cupid", "Heartless Horseman", "Drachen", "Cat Jester", "Jestilence",
+
+                    // Pets
+                    "Pale Horse", "Black Cat", "White Wolf", "Gobby", "Bessie", "Cob", "Poe", "Hammond", "Coyote",
+                    "Mushruwum", "Demon Pup", "Polly", "Jack-o'-lantern", "Sir Froglington", "Spike", "Sir Gobbleston",
+                    "Iceberg", "Shimmerscale", "Satrio", "Cthulhu", "Grimmie", "Necronomicon", "Woolums", "Chameleon",
+                    "Gryphon", "Hipgrook", "Blicks", "Thunder Bird", "Pegasus", "Phoenix", "Deer", "Baby Dragon", "Monkey Box",
+
+                    // References
+                    "Kidnapper", "Handler", "Medium", "Transporter", "Agent", "Godfather", "Mafioso", "Framer",
+                    "Disguiser", "Hypnotist", "Consigliere", "Forger", "Mafia", "Escort", "Consort", "Bootlegger",
+                    "Vampire Hunter", "Beguiler", "Doctor", "Janitor", "Blackmailer", "Guardian Angel", "Survivor",
+                    "Juggernaut", "Altruist", "Imitator", "Hunter", "The", "Glitch", "Medic",
+
+                    // Other
+                    "waga", "baba", "bobo", "Tuba", "Bald", "Loonie", "Dyl", "cag", "Any", "Banned", "Ravens", "Iguanas",
+                    "amogus", "April", "Revolution", "Steve", "Chicken", "Jockey", "Bater", "Water", "Horseman", "of",
+                    "Wucket", "Bucket", "Release", "Flint", "and", "Steel", "Nether", "Dennis", "Hamburger", "Salem",
+                    "Fire", "Thunder", "Hammer", "Jump", "High", "Spin", "Tickle"
+                };
+
+
+                var shuffled = titles.OrderBy(x => random.Next()).ToArray();
+                string text1 = shuffled[0];
+                string text2 = shuffled[1];
+                string text3 = shuffled[2];
+
+                Random r = new Random();
+                int lobbyIcon = r.Next(0, 246); 
+                if (ModSettings.GetBool("Randomize Lobby Info", "loonie.jestersgambit")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
+
+
                 return new Tuple<bool, string>(true,
                     $"Attempted to add {roleCount} roles, {modifierCount} modifiers, and ban {banCount} roles.");
             }
+
 
             public string GetHelpMessage()
             {
