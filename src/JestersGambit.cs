@@ -63,6 +63,9 @@ namespace JestersGambit
                 var buckets = Utils.IsBTOS2() ? BTOSBucketIDs : VanillaBucketIDs;
                 var validDupes = Utils.IsBTOS2() ? BTOSDupes : VanillaDupes;
 
+                HashSet<int> apocIds = [41, 42, 47, 50, 114];
+                int apocInDeck = currentRoles.Count(r => apocIds.Contains(r));
+
                 const int maxAttempts = 50;
 
                 for (int attempts = 0; attempts < maxAttempts; attempts++)
@@ -78,6 +81,22 @@ namespace JestersGambit
                     {
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to add role {roleID} to the role deck.");
+
+                        if (!Utils.IsBTOS2() && apocIds.Contains(roleID))
+                        {
+                            apocInDeck += 1;
+
+                            if (apocInDeck >= 2)
+                            {
+                                const int FourHorsemenID = (int)Role.FOUR_HORSEMEN;
+                                if (!currentRoles.Contains(FourHorsemenID))
+                                {
+                                    Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN);
+                                    Console.WriteLine("Added the Four Horsemen modifier due to multiple Apocalypse roles.");
+                                }
+                            }
+                        }
+
                         return;
                     }
                 }
@@ -252,7 +271,7 @@ namespace JestersGambit
                 int modifiersMax = ModSettings.GetInt("Maximum Modifiers", "loonie.jestersgambit");
                 int bansMax = ModSettings.GetInt("Maximum Bans", "loonie.jestersgambit");
 
-                int maxModifiers = !Utils.IsBTOS2() && modifiersMax > 3 ? 3 : modifiersMax;
+                int maxModifiers = !Utils.IsBTOS2() && modifiersMax > 2 ? 2 : modifiersMax;
                 int maxBans = !Utils.IsBTOS2() && bansMax > 3 ? 3 : bansMax;
 
                 int roleCount = 20;
