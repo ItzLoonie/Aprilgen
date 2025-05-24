@@ -3,7 +3,7 @@
     "DisplayName": "Aprilgen",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
-    "Version": "1.0.2",
+    "Version": "1.0.3",
     "RequiredMods": [ "voidbehemoth.commandlib" ],
     "Settings": {
         "IntegerInputSettings":
@@ -47,7 +47,25 @@
             },
             {
                 "Name": "Auto-Add Necro Passing",
-                "Description": "Automatically adds the Necro Passing modifier to the role deck in BetterTOS2 Custom if possible.",
+                "Description": "Automatically adds the Necro Passing modifier to the role deck in BetterTOS2 Custom  when running /randomall if possible.",
+                "DefaultValue": true,
+                "AvailableInGame": true
+            },
+            {
+                "Name": "Auto-Remove Slow Mode",
+                "Description": "Automatically removes the Slow Mode modifier when running /randomall if possible.",
+                "DefaultValue": true,
+                "AvailableInGame": true
+            },
+            {
+                "Name": "Cap Pandora to 4 Members",
+                "Description": "Automatically removes the Pandora's Box modifier in BetterTOS2 Custom when running /randomall if the possible Pandora members can exceed 4.",
+                "DefaultValue": true,
+                "AvailableInGame": true
+            },
+            {
+                "Name": "Cap Compliance to 4 Members",
+                "Description": "Automatically removes the Compliant Killers modifier in BetterTOS2 Custom when running /randomall if the possible Compliance members can exceed 4.",
                 "DefaultValue": true,
                 "AvailableInGame": true
             }

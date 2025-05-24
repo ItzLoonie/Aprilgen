@@ -65,6 +65,10 @@ namespace Aprilgen
 
                 HashSet<int> apocIds = [41, 42, 47, 50, 114];
                 int apocInDeck = currentRoles.Count(r => apocIds.Contains(r));
+                HashSet<int> complianceIds = [40, 48, 49, 50, 100, 101, 118, 116];
+                int pandoraInDeck = currentRoles.Count(r => apocIds.Contains(r));
+                HashSet<int> pandoraIds = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 47, 50, 54, 62, 251, 252, 109, 110, 11, 112, 113, 114, 115, 100, 101];
+                int complianceInDeck = currentRoles.Count(r => apocIds.Contains(r));
 
                 const int maxAttempts = 50;
 
@@ -93,6 +97,34 @@ namespace Aprilgen
                                 {
                                     Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN);
                                     Console.WriteLine("Added the Four Horsemen modifier due to multiple Apocalypse roles.");
+                                }
+                            }
+                        }
+                        if (Utils.IsBTOS2() && pandoraIds.Contains(roleID) && ModSettings.GetBool("Cap Pandora to 4 Members", "loonie.aprilgen"))
+                        {
+                            pandoraInDeck += 1;
+
+                            if (pandoraInDeck > 4)
+                            {
+                                const int PandoraID = (int)(Role)222;
+                                if (!currentRoles.Contains(PandoraID))
+                                {
+                                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck((Role)222);
+                                    Console.WriteLine("Removed the Pandora's Box modifier due to the possibility of too many Pandora members.");
+                                }
+                            }
+                        }
+                        if (Utils.IsBTOS2() && complianceIds.Contains(roleID) && ModSettings.GetBool("Cap Compliance to 4 Members", "loonie.aprilgen"))
+                        {
+                            complianceInDeck += 1;
+
+                            if (complianceInDeck > 4)
+                            {
+                                const int ComplianceID = (int)(Role)221;
+                                if (!currentRoles.Contains(ComplianceID))
+                                {
+                                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck((Role)221);
+                                    Console.WriteLine("Removed the Compliant Killers modifier due to the possibility of too many Compliance members.");
                                 }
                             }
                         }
@@ -391,6 +423,7 @@ namespace Aprilgen
                 if (ModSettings.GetBool("Randomize Lobby Info", "loonie.aprilgen")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
 
                 if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.aprilgen")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); // Add Necro Passing if possible
+                if (ModSettings.GetBool("Auto-Remove Slow Mode", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.SLOW_MODE); 
 
 
                 return new Tuple<bool, string>(true,
