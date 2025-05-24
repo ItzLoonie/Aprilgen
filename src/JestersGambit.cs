@@ -255,14 +255,14 @@ namespace JestersGambit
                 int maxModifiers = !Utils.IsBTOS2() && modifiersMax > 3 ? 3 : modifiersMax;
                 int maxBans = !Utils.IsBTOS2() && bansMax > 3 ? 3 : bansMax;
 
-                int roleCount = 15;
+                int roleCount = 20;
                 int modifierCount = random.Next(0, maxModifiers + 1);
                 int banCount = random.Next(0, maxBans + 1);
 
                 ClearCommand.ClearRoleDeck();
 
                 if (args.Length > 0 && int.TryParse(args[0], out int parsedRoles))
-                    roleCount = Math.Clamp(parsedRoles, 1, 15);
+                    roleCount = Math.Clamp(parsedRoles, 1, 20);
 
                 if (args.Length > 1 && int.TryParse(args[1], out int parsedMods))
                     modifierCount = Math.Clamp(parsedMods, 0, maxModifiers);
@@ -339,11 +339,22 @@ namespace JestersGambit
                     "Vampire Hunter", "Beguiler", "Doctor", "Janitor", "Blackmailer", "Guardian Angel", "Survivor",
                     "Juggernaut", "Altruist", "Imitator", "Hunter", "The", "Glitch", "Medic",
 
+                    // Colors
+                    "Red", "Blue", "Green", "Pink", "Purple", "Orange", "Yellow", "White", "Black", "Brown", "Gray",
+                    "Magenta", "Cyan", "Rose", "Maroon", "Tan", "Olive", "Banana", "Indigo", "Teal", "Violet",
+
                     // Other
                     "waga", "baba", "bobo", "Tuba", "Bald", "Loonie", "Dyl", "cag", "Any", "Banned", "Ravens", "Iguanas",
                     "amogus", "April", "Revolution", "Steve", "Chicken", "Jockey", "Bater", "Water", "Horseman", "of",
                     "Wucket", "Bucket", "Release", "Flint", "and", "Steel", "Nether", "Dennis", "Hamburger", "Salem",
-                    "Fire", "Thunder", "Hammer", "Jump", "High", "Spin", "Tickle"
+                    "Fire", "Thunder", "Hammer", "Jump", "High", "Spin", "Tickle", "Rework", "Overhaul", "Buff", "Nerf",
+                    "Craft", "Mine", "Cheese", "Fork", "Traitor", "King", "Queen", "Chaos", "Corvus", "Viking", "Confirmed",
+                    "Mode", "Token", "Fool", "Fortune", "Slow", "Fast", "Rapid", "Horsemen", "Shield", "Deck", "Role", "Modifier",
+                    "Exposed", "Lightly", "Weathered", "Cut", "Copper", "Stairs", "Draw", "Match", "Player", "Squid", "Bomb",
+                    "Crewmate", "Impostor", "Random", "Common", "Power", "Killing", "Protective", "Support", "Special", "Pariah",
+                    "Neutral", "True", "Utility", "Deception", "Forgor", "Scam", "Discord", "Puppeteer", "Master", "Puppet", "Target",
+                    "Reanimate", "Math", "Science", "Time", "Travel", "Diamond", "Emerald", "Redstone", "Bluestone", "Quartz", "Iron",
+                    "Gold", "Purpur", "Chorus"
                 ];
 
 
