@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard21</TargetFramework>
-    <AssemblyName>Aprilgen</AssemblyName>
+    <AssemblyName>TheAprilgen</AssemblyName>
     <Description>Commands to add to Custom role lists!</Description>
-    <RootNamespace>Aprilgen</RootNamespace>
+    <RootNamespace>TheAprilgen</RootNamespace>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
