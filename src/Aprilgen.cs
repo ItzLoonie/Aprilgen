@@ -376,7 +376,8 @@ namespace Aprilgen
                     "Gold", "Purpur", "Chorus", "Conquest", "Vanilla", "Better", "Exodia", "Godcoroner", "Dev", "Vigilantics", "Day",
                     "Night", "Marathon", "Shroob", "Destroy", "Stab", "Disguise", "Win", "Loss", "Lose", "Ranked", "All", "Fools",
                     "Detection", "Immune", "Host", "Promote", "May", "March", "Fancy", "UI", "Misc", "Customization", "Det", "Just",
-                    "Another", "Noob", "Alchlc", "Systm", "Reactivated", "Double", "Triple", "Trouble", "Lobby"
+                    "Another", "Noob", "Alchlc", "Systm", "Reactivated", "Double", "Triple", "Trouble", "Lobby", "Dracula", "Palace",
+                    "Wandering", "Souls", "Domain", "Custom", "Dual", "Dilemma", "Aprilgen"
                 ];
 
 
