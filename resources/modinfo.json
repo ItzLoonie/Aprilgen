@@ -56,18 +56,6 @@
                 "Description": "Automatically removes the Slow Mode modifier when running /randomall if possible.",
                 "DefaultValue": true,
                 "AvailableInGame": true
-            },
-            {
-                "Name": "Cap Pandora to 4 Members",
-                "Description": "Automatically removes the Pandora's Box modifier in BetterTOS2 Custom when running /randomall if the possible Pandora members can exceed 4.",
-                "DefaultValue": true,
-                "AvailableInGame": true
-            },
-            {
-                "Name": "Cap Compliance to 4 Members",
-                "Description": "Automatically removes the Compliant Killers modifier in BetterTOS2 Custom when running /randomall if the possible Compliance members can exceed 4.",
-                "DefaultValue": true,
-                "AvailableInGame": true
             }
         ]
     }

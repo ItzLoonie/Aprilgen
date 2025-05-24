@@ -100,35 +100,6 @@ namespace Aprilgen
                                 }
                             }
                         }
-                        if (Utils.IsBTOS2() && pandoraIds.Contains(roleID) && ModSettings.GetBool("Cap Pandora to 4 Members", "loonie.aprilgen"))
-                        {
-                            pandoraInDeck += 1;
-
-                            if (pandoraInDeck > 4)
-                            {
-                                const int PandoraID = (int)(Role)222;
-                                if (!currentRoles.Contains(PandoraID))
-                                {
-                                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck((Role)222);
-                                    Console.WriteLine("Removed the Pandora's Box modifier due to the possibility of too many Pandora members.");
-                                }
-                            }
-                        }
-                        if (Utils.IsBTOS2() && complianceIds.Contains(roleID) && ModSettings.GetBool("Cap Compliance to 4 Members", "loonie.aprilgen"))
-                        {
-                            complianceInDeck += 1;
-
-                            if (complianceInDeck > 4)
-                            {
-                                const int ComplianceID = (int)(Role)221;
-                                if (!currentRoles.Contains(ComplianceID))
-                                {
-                                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck((Role)221);
-                                    Console.WriteLine("Removed the Compliant Killers modifier due to the possibility of too many Compliance members.");
-                                }
-                            }
-                        }
-
                         return;
                     }
                 }
