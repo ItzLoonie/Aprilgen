@@ -354,7 +354,7 @@ namespace JestersGambit
                     "Crewmate", "Impostor", "Random", "Common", "Power", "Killing", "Protective", "Support", "Special", "Pariah",
                     "Neutral", "True", "Utility", "Deception", "Forgor", "Scam", "Discord", "Puppeteer", "Master", "Puppet", "Target",
                     "Reanimate", "Math", "Science", "Time", "Travel", "Diamond", "Emerald", "Redstone", "Bluestone", "Quartz", "Iron",
-                    "Gold", "Purpur", "Chorus"
+                    "Gold", "Purpur", "Chorus", "Conquest", "Vanilla", "Better"
                 ];
 
 
