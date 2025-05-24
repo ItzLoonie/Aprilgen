@@ -386,6 +386,8 @@ namespace JestersGambit
                 int lobbyIcon = r.Next(0, 246); 
                 if (ModSettings.GetBool("Randomize Lobby Info", "loonie.jestersgambit")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
 
+                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.jestersgambit")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); // Add Necro Passing if possible
+
 
                 return new Tuple<bool, string>(true,
                     $"Attempted to add {roleCount} roles, {modifierCount} modifiers, and ban {banCount} roles.");
@@ -401,3 +403,4 @@ namespace JestersGambit
     }
 
 }
+ 

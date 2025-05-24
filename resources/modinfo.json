@@ -44,7 +44,13 @@
                 "Description": "Randomizes the lobby name and icon when running /randomall.",
                 "DefaultValue": true,
                 "AvailableInGame": true
+            },
+            {
+                "Name": "Auto-Add Necro Passing",
+                "Description": "Automatically adds the Necro Passing modifier to the role deck in BetterTOS2 Custom if possible.",
+                "DefaultValue": true,
+                "AvailableInGame": true
             }
         ]
     }
-}
+} 
