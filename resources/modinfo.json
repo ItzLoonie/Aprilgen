@@ -1,6 +1,6 @@
 {
-    "HarmonyId": "loonie.jestersgambit",
-    "DisplayName": "Jester's Gambit",
+    "HarmonyId": "loonie.aprilgen",
+    "DisplayName": "Aprilgen",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
     "Version": "1.0.2",

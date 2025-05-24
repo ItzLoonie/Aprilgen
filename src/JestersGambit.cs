@@ -7,10 +7,10 @@ using Server.Shared.State;
 using System.Linq;
 using BetterTOS2;
 
-namespace JestersGambit
+namespace Aprilgen
 {
     [Mod.SalemMod]
-    public class JestersGambit
+    public class Aprilgen
     {
 
         private static readonly Random random = new();
@@ -53,7 +53,7 @@ namespace JestersGambit
 
             public static void AddRandomRoleToDeck(Random rand)
             {
-                int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.jestersgambit");
+                int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.Aprilgen");
                 double bucketChance = Math.Clamp(setting, 0, 100) / 100.0;
 
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToHashSet();
@@ -268,8 +268,8 @@ namespace JestersGambit
         {
             public override Tuple<bool, string> Execute(string[] args)
             {
-                int modifiersMax = ModSettings.GetInt("Maximum Modifiers", "loonie.jestersgambit");
-                int bansMax = ModSettings.GetInt("Maximum Bans", "loonie.jestersgambit");
+                int modifiersMax = ModSettings.GetInt("Maximum Modifiers", "loonie.Aprilgen");
+                int bansMax = ModSettings.GetInt("Maximum Bans", "loonie.Aprilgen");
 
                 int maxModifiers = !Utils.IsBTOS2() && modifiersMax > 2 ? 2 : modifiersMax;
                 int maxBans = !Utils.IsBTOS2() && bansMax > 3 ? 3 : bansMax;
@@ -384,9 +384,9 @@ namespace JestersGambit
 
                 Random r = new();
                 int lobbyIcon = r.Next(0, 246); 
-                if (ModSettings.GetBool("Randomize Lobby Info", "loonie.jestersgambit")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
+                if (ModSettings.GetBool("Randomize Lobby Info", "loonie.Aprilgen")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
 
-                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.jestersgambit")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); // Add Necro Passing if possible
+                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.Aprilgen")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); // Add Necro Passing if possible
 
 
                 return new Tuple<bool, string>(true,

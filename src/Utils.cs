@@ -1,6 +1,6 @@
 using SML;
 
-namespace JestersGambit
+namespace Aprilgen
 {
     public static class Utils
     {
