@@ -65,10 +65,10 @@ namespace Aprilgen
 
                 HashSet<int> apocIds = [41, 42, 47, 50, 114];
                 int apocInDeck = currentRoles.Count(r => apocIds.Contains(r));
-                HashSet<int> complianceIds = [40, 48, 49, 50, 100, 101, 118, 116];
-                int pandoraInDeck = currentRoles.Count(r => apocIds.Contains(r));
                 HashSet<int> pandoraIds = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 47, 50, 54, 62, 251, 252, 109, 110, 11, 112, 113, 114, 115, 100, 101];
-                int complianceInDeck = currentRoles.Count(r => apocIds.Contains(r));
+                int pandoraInDeck = currentRoles.Count(r => pandoraIds.Contains(r));
+                HashSet<int> complianceIds = [40, 48, 49, 50, 100, 101, 118, 116];
+                int complianceInDeck = currentRoles.Count(r => complianceIds.Contains(r));
 
                 const int maxAttempts = 50;
 
