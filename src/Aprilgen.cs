@@ -85,24 +85,6 @@ namespace Aprilgen
                     {
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to add role {roleID} to the role deck.");
-
-                        currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToHashSet();
-
-                        if (!Utils.IsBTOS2() && apocIds.Contains(roleID))
-                        {
-                            apocInDeck += 1;
-                            Console.WriteLine($"Apocalypse roles in deck: {apocInDeck}");
-
-                            if (apocInDeck >= 2)
-                            {
-                                const int FourHorsemenID = (int)Role.FOUR_HORSEMEN;
-                                if (!currentRoles.Contains(FourHorsemenID))
-                                {
-                                    Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN);
-                                    Console.WriteLine("Added the Four Horsemen modifier due to multiple Apocalypse roles.");
-                                }
-                            }
-                        }
                         return;
                     }
                 }
@@ -396,8 +378,15 @@ namespace Aprilgen
                 int lobbyIcon = r.Next(0, 246); 
                 if (ModSettings.GetBool("Randomize Lobby Info", "loonie.aprilgen")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
 
-                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.aprilgen")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); // Add Necro Passing if possible
-                if (ModSettings.GetBool("Auto-Remove Slow Mode", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.SLOW_MODE); 
+                // Add Necro Passing if possible (fails if it exists or Teams exists)
+                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.aprilgen")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); 
+
+                // Fuck Slow Mode
+                if (ModSettings.GetBool("Auto-Remove Slow Mode", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.SLOW_MODE);
+                
+                // List generation bypasses the Apocalypse limit (because server ), so we have to do this so the list is valid
+                // Pretty sure the Apocalypse limit is client side, which may be why it succeeds, as it might not exist server side.
+                if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 
 
 
                 return new Tuple<bool, string>(true,
