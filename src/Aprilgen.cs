@@ -370,7 +370,7 @@ namespace Aprilgen
 
 
                 var shuffled = titles.OrderBy(x => random.Next()).ToArray();
-                string text1 = ModSettings.GetBool("Force 'April' in Randomized Lobby Info", "loonie.aprilgen") ? "April -" : shuffled[0];
+                string text1 = ModSettings.GetBool("Force 'April' in Randomized Lobby Info", "loonie.aprilgen") ? "[April] " + shuffled[0] : shuffled[0];
                 string text2 = shuffled[1];
                 string text3 = shuffled[2];
 
