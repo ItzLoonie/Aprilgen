@@ -3,7 +3,7 @@
     "DisplayName": "Aprilgen",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
-    "Version": "0.1.3",
+    "Version": "0.1.4",
     "RequiredMods": [ "voidbehemoth.commandlib" ],
     "Settings": {
         "IntegerInputSettings":
