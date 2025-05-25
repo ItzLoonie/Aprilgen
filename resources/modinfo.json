@@ -62,6 +62,12 @@
                 "Description": "Automatically removes the Perfect Town modifier when running /randomall if possible.",
                 "DefaultValue": true,
                 "AvailableInGame": true
+            },
+            {
+                "Name": "Auto-Remove Teams",
+                "Description": "Automatically removes the Teams modifier in BetterTOS2 Custom when running /randomall if possible.",
+                "DefaultValue": false,
+                "AvailableInGame": true
             }
         ]
     }
