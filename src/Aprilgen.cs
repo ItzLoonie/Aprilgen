@@ -390,7 +390,7 @@ namespace Aprilgen
                 // in case you really do not want Teams Mode
                 if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Remove Teams", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck((Role)213);
 
-                // List generation bypasses the Apocalypse limit (because server ), so we have to do this so the list is valid
+                // List generation bypasses the Apocalypse limit, so we have to do this so the list is valid
                 // Pretty sure the Apocalypse limit is client side, which may be why it succeeds, as it might not exist server side.
                 if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 
 
