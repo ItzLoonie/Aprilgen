@@ -384,6 +384,9 @@ namespace Aprilgen
                 // Fuck Slow Mode
                 if (ModSettings.GetBool("Auto-Remove Slow Mode", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.SLOW_MODE);
                 
+                // Perfect Town with Judge is um, yeah
+                if (ModSettings.GetBool("Auto-Remove Perfect Town", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.NO_TOWN_HANGED);
+
                 // List generation bypasses the Apocalypse limit (because server ), so we have to do this so the list is valid
                 // Pretty sure the Apocalypse limit is client side, which may be why it succeeds, as it might not exist server side.
                 if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 

@@ -56,6 +56,12 @@
                 "Description": "Automatically removes the Slow Mode modifier when running /randomall if possible.",
                 "DefaultValue": true,
                 "AvailableInGame": true
+            },
+            {
+                "Name": "Auto-Remove Perfect Town",
+                "Description": "Automatically removes the Perfect Town modifier when running /randomall if possible.",
+                "DefaultValue": true,
+                "AvailableInGame": true
             }
         ]
     }
