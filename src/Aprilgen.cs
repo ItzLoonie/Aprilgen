@@ -86,9 +86,12 @@ namespace Aprilgen
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to add role {roleID} to the role deck.");
 
+                        currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToHashSet();
+
                         if (!Utils.IsBTOS2() && apocIds.Contains(roleID))
                         {
                             apocInDeck += 1;
+                            Console.WriteLine($"Apocalypse roles in deck: {apocInDeck}");
 
                             if (apocInDeck >= 2)
                             {
