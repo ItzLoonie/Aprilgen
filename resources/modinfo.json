@@ -46,6 +46,12 @@
                 "AvailableInGame": true
             },
             {
+                "Name": "Force 'April' in Randomized Lobby Info",
+                "Description": "Forces 'April' to be included in randomized lobby names.",
+                "DefaultValue": false,
+                "AvailableInGame": true
+            },
+            {
                 "Name": "Auto-Add Necro Passing",
                 "Description": "Automatically adds the Necro Passing modifier to the role deck in BetterTOS2 Custom  when running /randomall if possible.",
                 "DefaultValue": true,
