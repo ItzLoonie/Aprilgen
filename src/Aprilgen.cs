@@ -13,6 +13,7 @@ namespace Aprilgen
     public class Aprilgen
     {
 
+
         private static readonly Random random = new();
 
         private static readonly HashSet<int> VanillaDupes =
