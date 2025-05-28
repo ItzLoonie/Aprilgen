@@ -35,11 +35,11 @@ namespace Aprilgen
         {
             Console.WriteLine("why put effort into your role lists?");
 
-            CommandRegistry.AddCommand(new RoleCommand("randomrole", new[] { "r", "r-role" }));
-            CommandRegistry.AddCommand(new ModifierCommand("randommodifier", new[] { "m", "r-mod" }));
-            CommandRegistry.AddCommand(new BanCommand("randomban", new[] { "b", "r-ban" }));
-            CommandRegistry.AddCommand(new ClearCommand("clear", new[] { "c" }));
-            CommandRegistry.AddCommand(new FullRandomCommand("randomall", new[] { "a", "r-all" }));
+            CommandRegistry.AddCommand(new RoleCommand("randomrole", ["r", "r-role"]));
+            CommandRegistry.AddCommand(new ModifierCommand("randommodifier", ["m", "r-mod"]));
+            CommandRegistry.AddCommand(new BanCommand("randomban", ["b", "r-ban"]));
+            CommandRegistry.AddCommand(new ClearCommand("clear", ["c"]));
+            CommandRegistry.AddCommand(new FullRandomCommand("randomall", ["a", "r-all"]));
 
         }
         public class RoleCommand(string name, string[] aliases = null, string harmonyId = null) : Command(name, aliases, harmonyId), IHelpMessage
@@ -57,19 +57,12 @@ namespace Aprilgen
                 int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.aprilgen");
                 double bucketChance = Math.Clamp(setting, 0, 100) / 100.0;
 
-                var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToHashSet();
+                var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
                 var currentBans = Service.Game.Sim.simulation.roleDeckBuilder.Data.bannedRoles.Select(role => (int)role).ToHashSet();
 
                 var roles = Utils.IsBTOS2() ? BTOSRoleIDs : VanillaRoleIDs;
                 var buckets = Utils.IsBTOS2() ? BTOSBucketIDs : VanillaBucketIDs;
                 var validDupes = Utils.IsBTOS2() ? BTOSDupes : VanillaDupes;
-
-                HashSet<int> apocIds = [41, 42, 47, 50, 114];
-                int apocInDeck = currentRoles.Count(r => apocIds.Contains(r));
-                HashSet<int> pandoraIds = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 47, 50, 54, 62, 251, 252, 109, 110, 11, 112, 113, 114, 115, 100, 101];
-                int pandoraInDeck = currentRoles.Count(r => pandoraIds.Contains(r));
-                HashSet<int> complianceIds = [40, 48, 49, 50, 100, 101, 118, 116];
-                int complianceInDeck = currentRoles.Count(r => complianceIds.Contains(r));
 
                 const int maxAttempts = 50;
 
@@ -182,7 +175,7 @@ namespace Aprilgen
             public static void BanRandomRoleFromDeck(Random rand)
             {
                 var validRoleIDs = Utils.IsBTOS2() ? BTOSRoleIDs : VanillaRoleIDs;
-                var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToHashSet();
+                var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
                 var currentBans = Service.Game.Sim.simulation.roleDeckBuilder.Data.bannedRoles.Select(role => (int)role).ToHashSet();
 
                 const int maxAttempts = 50;
@@ -322,7 +315,7 @@ namespace Aprilgen
                     "Oracle", "Warlock", "Socialite", "War", "Famine", "Pestilence", "Death", "Stoned", "Hidden",
 
                     // Factions
-                    "Town", "Coven", "Apocalypse", "Pandora", "Egotist", "Compliance", "Lovers", "Frogs", "Lions", "Hawks",
+                    "Town", "Coven", "Apocalypse", "Pandora", "Egotist", "Compliance", "Frogs", "Lions", "Hawks",
 
                     // Skins
                     "John", "Macy", "Deodat", "Mary", "Giles", "Jack", "Brokk", "Artemys", "Francisco", "Avery",
@@ -366,12 +359,14 @@ namespace Aprilgen
                     "Night", "Marathon", "Shroob", "Destroy", "Stab", "Disguise", "Win", "Loss", "Lose", "Ranked", "All", "Fools",
                     "Detection", "Immune", "Host", "Promote", "May", "March", "Fancy", "UI", "Misc", "Customization", "Det", "Just",
                     "Another", "Noob", "Alchlc", "Systm", "Reactivated", "Double", "Triple", "Trouble", "Lobby", "Dracula", "Palace",
-                    "Wandering", "Souls", "Domain", "Custom", "Dual", "Dilemma", "Aprilgen"
+                    "Wandering", "Souls", "Domain", "Custom", "Dual", "Dilemma", "Aprilgen", "Danger", "Sixth", "Terms", "Service", "Lover",
+                    "Cannibal", "Censored", "Perfect", "Patreon", "Subscriber", "Live", "Die", "Dead", "Alive", "Disconnect", "Reconnect",
+                    "Life", "Pasta", "B", "City", "Pearl", "Star", "Moon", "Eclipse", "Heal", "Transport", "Shush", "Whisper", "Gradient"
                 ];
 
 
                 var shuffled = titles.OrderBy(x => random.Next()).ToArray();
-                string text1 = ModSettings.GetBool("Force 'April' in Randomized Lobby Info", "loonie.aprilgen") ? "[April] " + shuffled[0] : shuffled[0];
+                string text1 = shuffled[0];
                 string text2 = shuffled[1];
                 string text3 = shuffled[2];
 
@@ -380,7 +375,7 @@ namespace Aprilgen
                 if (ModSettings.GetBool("Randomize Lobby Info", "loonie.aprilgen")) Service.Game.Sim.simulation.SetLobbyInfo(lobbyIcon, $"{text1} {text2} {text3}");
 
                 // Add Necro Passing if possible (fails if it exists or Teams exists)
-                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.aprilgen")) Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)212); 
+                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Add Necro Passing", "loonie.aprilgen")) Service.Game.Sim.simulation.AddRoleToRoleDeck(RoleBTOS.NECRO_PASSING); 
 
                 // Fuck Slow Mode
                 if (ModSettings.GetBool("Auto-Remove Slow Mode", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.SLOW_MODE);
@@ -389,12 +384,39 @@ namespace Aprilgen
                 if (ModSettings.GetBool("Auto-Remove Perfect Town", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.NO_TOWN_HANGED);
 
                 // in case you really do not want Teams Mode
-                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Remove Teams", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck((Role)213);
+                if (Utils.IsBTOS2() && ModSettings.GetBool("Auto-Remove Teams", "loonie.aprilgen")) Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.TEAMS);
 
                 // List generation bypasses the Apocalypse limit, so we have to do this so the list is valid
                 // Pretty sure the Apocalypse limit is client side, which may be why it succeeds, as it might not exist server side.
-                if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 
+                // if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 
+                
+                var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
+                HashSet<int> apocIds = [41, 42, 47, 50, 114];
+                int apocInDeck = currentRoles.Count(r => apocIds.Contains(r));
+                HashSet<int> pandoraIds = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 47, 50, 54, 62, 251, 252, 109, 110, 11, 112, 113, 114, 115, 100, 101];
+                int pandoraInDeck = currentRoles.Count(r => pandoraIds.Contains(r));
+                HashSet<int> complianceIds = [40, 48, 49, 50, 100, 101, 118, 116];
+                int complianceInDeck = currentRoles.Count(r => complianceIds.Contains(r));
 
+                int maxPandora = ModSettings.GetInt("Pandora Cap", "loonie.aprilgen");
+                int maxCompliance = ModSettings.GetInt("Compliance Cap", "loonie.aprilgen");
+
+
+                if (apocInDeck > 1 && !Utils.IsBTOS2())
+                {
+                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.FOUR_HORSEMEN);
+                    Console.WriteLine($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.");
+                }
+                if (pandoraInDeck > maxPandora && Utils.IsBTOS2())
+                {
+                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.PANDORAS_BOX);
+                    Console.WriteLine($"Found up to {pandoraInDeck} Pandora members when Pandora can have up to {maxPandora} members, so we removed the Pandora's Box modifier.");
+                }
+                if (complianceInDeck > maxCompliance && Utils.IsBTOS2()) 
+                {
+                    Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.COMPLIANT_KILLERS);
+                    Console.WriteLine($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.");
+                }
 
                 return new Tuple<bool, string>(true,
                     $"Attempted to add {roleCount} roles, {modifierCount} modifiers, and ban {banCount} roles.");

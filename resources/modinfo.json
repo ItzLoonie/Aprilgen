@@ -3,7 +3,7 @@
     "DisplayName": "Aprilgen",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
-    "Version": "0.1.4",
+    "Version": "0.2.0",
     "RequiredMods": [ "voidbehemoth.commandlib" ],
     "Settings": {
         "IntegerInputSettings":
@@ -34,6 +34,24 @@
                 "MinValue": 1,
                 "MaxValue": 50,
                 "AvailableInGame": true
+            },
+            {
+                "Name": "Pandora Cap",
+                "SettingID": "loonie.pandoracap",
+                "Description": "The maximum amount of natural Pandora members that can exist.",
+                "DefaultValue": 4,
+                "MinValue": 1,
+                "MaxValue": 8,
+                "AvailableInGame": true
+            },
+            {
+                "Name": "Compliance Cap",
+                "SettingID": "loonie.Compliancecap",
+                "Description": "The maximum amount of natural Compliance members that can exist.",
+                "DefaultValue": 4,
+                "MinValue": 1,
+                "MaxValue": 15,
+                "AvailableInGame": true
             }
             
         ],
@@ -43,12 +61,6 @@
                 "Name": "Randomize Lobby Info",
                 "Description": "Randomizes the lobby name and icon when running /randomall.",
                 "DefaultValue": true,
-                "AvailableInGame": true
-            },
-            {
-                "Name": "Force 'April' in Randomized Lobby Info",
-                "Description": "Forces 'April' to be included in randomized lobby names.",
-                "DefaultValue": false,
                 "AvailableInGame": true
             },
             {
