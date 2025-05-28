@@ -53,7 +53,7 @@ namespace Aprilgen
             private static readonly List<int> BTOSRoleIDs = [.. Enumerable.Range(1, 62), 251, 252];
             private static readonly List<int> BTOSBucketIDs = [.. Enumerable.Range(100, 22)];
 
-            public static void AddRandomRoleToDeck(Random rand, bool isAll = false)
+            public static void AddRandomRoleToDeck(Random rand, bool sendFeedback = true)
             {
                 int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.aprilgen");
                 double bucketChance = Math.Clamp(setting, 0, 100) / 100.0;
@@ -80,7 +80,7 @@ namespace Aprilgen
                     {
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to add role {(Role)roleID} to the role deck.");
-                        if (!isAll || ModSettings.GetBool("Send Standalone Feedback with /randomall", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add [[#{roleID}]] to the role deck.", "info", false);
+                        if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to add [[#{roleID}]] to the role deck.", "info", false);
                         return;
                     }
                 }
@@ -121,7 +121,7 @@ namespace Aprilgen
 
             private static readonly List<int> BTOSModifierIDs = [.. Enumerable.Range(201, 31)];
 
-            public static void AddRandomModifierToDeck(Random rand, bool isAll = false)
+            public static void AddRandomModifierToDeck(Random rand, bool sendFeedback = true)
             {
                 var validModifierIDs = Utils.IsBTOS2() ? BTOSModifierIDs : VanillaModifierIDs;
                 int attempts = 0;
@@ -142,7 +142,7 @@ namespace Aprilgen
 
                     Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
                     Console.WriteLine($"Attempted to add modifier {modifierText} to the role deck.");
-                    if (!isAll || ModSettings.GetBool("Send Standalone Feedback with /randomall", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add modifier {modifierText} to the role deck.", "info", false);
+                    if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to add modifier {modifierText} to the role deck.", "info", false);
                     return;
                 }
 
@@ -182,7 +182,7 @@ namespace Aprilgen
 
             private static readonly List<int> BTOSRoleIDs = [.. Enumerable.Range(1, 62)];
 
-            public static void BanRandomRoleFromDeck(Random rand, bool isAll = false)
+            public static void BanRandomRoleFromDeck(Random rand, bool sendFeedback = true)
             {
                 var validRoleIDs = Utils.IsBTOS2() ? BTOSRoleIDs : VanillaRoleIDs;
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
@@ -199,7 +199,7 @@ namespace Aprilgen
                     {
                         Service.Game.Sim.simulation.AddBannedRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to ban role {roleID} from the role deck.");
-                        if (!isAll || ModSettings.GetBool("Send Standalone Feedback with /randomall", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to ban [[#{roleID}]] from the role deck.", "info", false);
+                        if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to ban [[#{roleID}]] from the role deck.", "info", false);
                         return;
                     }
                 }
@@ -240,6 +240,7 @@ namespace Aprilgen
                 Service.Game.Sim.simulation.ClearRoleDeck();
 
                 Console.WriteLine("Role deck reset.");
+                Utils.AddFeedbackMsg("Role deck cleared.");
             }
 
 
@@ -284,13 +285,13 @@ namespace Aprilgen
                     banCount = Math.Clamp(parsedBans, 0, maxBans);
 
                 for (int i = 0; i < modifierCount; i++)
-                    ModifierCommand.AddRandomModifierToDeck(random, true);
+                    ModifierCommand.AddRandomModifierToDeck(random, false);
 
                 for (int i = 0; i < roleCount; i++)
-                    RoleCommand.AddRandomRoleToDeck(random, true);
+                    RoleCommand.AddRandomRoleToDeck(random, false);
 
                 for (int i = 0; i < banCount; i++)
-                    BanCommand.BanRandomRoleFromDeck(random, true);
+                    BanCommand.BanRandomRoleFromDeck(random, false);
 
                 string[] titles =
                 [
