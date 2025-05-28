@@ -77,10 +77,14 @@ namespace Aprilgen
                     bool alreadyInDeck = currentRoles.Contains(roleID);
                     bool isBanned = currentBans.Contains(roleID);
 
+                    Role role = (Role)roleID;
+                    string roleText = role.ToDisplayString();
+
+
                     if ((isDupe || !alreadyInDeck) && !isBanned)
                     {
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
-                        Console.WriteLine($"Attempted to add role {(Role)roleID} to the role deck.");
+                        Console.WriteLine($"Attempted to add role {roleText} to the role deck.");
                         if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to add [[#{roleID}]] to the role deck.", "info", false);
                         return roleID;
                     }
@@ -127,7 +131,7 @@ namespace Aprilgen
                 if (addedRoles.Count > 0)
                 {
                     string list = string.Join(", ", addedRoles.Select(id => $"[[#{id}]]"));
-                    Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
+                    if (!ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
                 }
 
                 if (failedCount > 0)
@@ -199,7 +203,7 @@ namespace Aprilgen
                 {
                     var names = addedModifiers.Select(id => ((Role)id).ToDisplayString());
                     string list = string.Join(", ", names);
-                    Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
+                    if (!ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
                 }
 
                 if (failedCount > 0)
@@ -250,10 +254,13 @@ namespace Aprilgen
                 {
                     int roleID = validRoleIDs[rand.Next(validRoleIDs.Count)];
 
+                    Role role = (Role)roleID;
+                    string roleText = role.ToDisplayString();
+
                     if (!currentRoles.Contains(roleID) && !currentBans.Contains(roleID))
                     {
                         Service.Game.Sim.simulation.AddBannedRoleToRoleDeck((Role)roleID);
-                        Console.WriteLine($"Attempted to ban role {roleID} from the role deck.");
+                        Console.WriteLine($"Attempted to ban role {roleText} from the role deck.");
                         if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to ban [[#{roleID}]] from the role deck.", "info", false);
                         return roleID;  // Return the banned role ID
                     }
@@ -281,7 +288,7 @@ namespace Aprilgen
                 if (bannedRoles.Count > 0)
                 {
                     string list = string.Join(", ", bannedRoles.Select(id => $"[[#{id}]]"));
-                    Utils.AddFeedbackMsg($"Attempted to ban: {list}", "info", false);
+                    if (!ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to ban: {list}", "info", false);
                 }
 
                 if (failedCount > 0)
