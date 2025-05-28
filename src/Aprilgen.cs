@@ -131,7 +131,7 @@ namespace Aprilgen
                 if (addedRoles.Count > 0)
                 {
                     string list = string.Join(", ", addedRoles.Select(id => $"[[#{id}]]"));
-                    if (!ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
+                    if (ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
                 }
 
                 if (failedCount > 0)
@@ -203,7 +203,7 @@ namespace Aprilgen
                 {
                     var names = addedModifiers.Select(id => ((Role)id).ToDisplayString());
                     string list = string.Join(", ", names);
-                    if (!ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
+                    if (ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
                 }
 
                 if (failedCount > 0)
@@ -288,7 +288,7 @@ namespace Aprilgen
                 if (bannedRoles.Count > 0)
                 {
                     string list = string.Join(", ", bannedRoles.Select(id => $"[[#{id}]]"));
-                    if (!ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to ban: {list}", "info", false);
+                    if (ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to ban: {list}", "info", false);
                 }
 
                 if (failedCount > 0)
