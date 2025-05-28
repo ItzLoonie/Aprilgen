@@ -494,8 +494,11 @@ namespace Aprilgen
                 int maxCompliance = ModSettings.GetInt("Compliance Cap", "loonie.aprilgen");
 
 
-                Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.FOUR_HORSEMEN);
-                
+                    Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN);
+                    Utils.AddFeedbackMsg($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.", "critical", false);
+                    Console.WriteLine($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.");
+                    
+                }
                 if (pandoraInDeck > maxPandora && Utils.IsBTOS2() && !Utils.ModifierExists(RoleBTOS.PANDORAS_BOX))
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.PANDORAS_BOX);
