@@ -34,24 +34,6 @@
                 "MinValue": 1,
                 "MaxValue": 50,
                 "AvailableInGame": true
-            },
-            {
-                "Name": "Pandora Cap",
-                "SettingID": "loonie.pandoracap",
-                "Description": "The maximum amount of natural Pandora members that can exist.",
-                "DefaultValue": 4,
-                "MinValue": 1,
-                "MaxValue": 8,
-                "AvailableInGame": true
-            },
-            {
-                "Name": "Compliance Cap",
-                "SettingID": "loonie.Compliancecap",
-                "Description": "The maximum amount of natural Compliance members that can exist.",
-                "DefaultValue": 4,
-                "MinValue": 1,
-                "MaxValue": 15,
-                "AvailableInGame": true
             }
             
         ],

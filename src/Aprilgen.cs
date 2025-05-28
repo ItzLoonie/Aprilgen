@@ -480,7 +480,7 @@ namespace Aprilgen
 
                 // List generation bypasses the Apocalypse limit, so we have to do this so the list is valid
                 // Pretty sure the Apocalypse limit is client side, which may be why it succeeds, as it might not exist server side.
-                // if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 
+                if (!Utils.IsBTOS2()) Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN); 
                 
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
                 HashSet<int> apocIds = [41, 42, 47, 50, 114];
@@ -494,7 +494,8 @@ namespace Aprilgen
                 int maxCompliance = ModSettings.GetInt("Compliance Cap", "loonie.aprilgen");
 
 
-                if (apocInDeck > 1 && !Utils.IsBTOS2() && !Utils.ModifierExists(Role.FOUR_HORSEMEN))
+                // This code occurs late, this not functioning
+                /* if (apocInDeck > 1 && !Utils.IsBTOS2() && !Utils.ModifierExists(Role.FOUR_HORSEMEN))
                 {
                     Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN);
                     Utils.AddFeedbackMsg($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.", "critical", false);
@@ -512,7 +513,7 @@ namespace Aprilgen
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.COMPLIANT_KILLERS);
                     Utils.AddFeedbackMsg($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.", "critical", false);
                     Console.WriteLine($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.");
-                }
+                } */
 
                 Utils.AddFeedbackMsg("Generated a role deck.");
 
