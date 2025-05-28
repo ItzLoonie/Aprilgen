@@ -323,7 +323,6 @@ namespace Aprilgen
                 Service.Game.Sim.simulation.ClearRoleDeck();
 
                 Console.WriteLine("Role deck reset.");
-                Utils.AddFeedbackMsg("Role deck cleared.");
             }
 
 
@@ -331,6 +330,7 @@ namespace Aprilgen
             {
                 {
                     ClearRoleDeck();
+                    Utils.AddFeedbackMsg("Role deck cleared.");
                 }
 
                 return new Tuple<bool, string>(true, $"Reset role deck.");
