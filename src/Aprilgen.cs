@@ -361,7 +361,8 @@ namespace Aprilgen
                     "Another", "Noob", "Alchlc", "Systm", "Reactivated", "Double", "Triple", "Trouble", "Lobby", "Dracula", "Palace",
                     "Wandering", "Souls", "Domain", "Custom", "Dual", "Dilemma", "Aprilgen", "Danger", "Sixth", "Terms", "Service", "Lover",
                     "Cannibal", "Censored", "Perfect", "Patreon", "Subscriber", "Live", "Die", "Dead", "Alive", "Disconnect", "Reconnect",
-                    "Life", "Pasta", "B", "City", "Pearl", "Star", "Moon", "Eclipse", "Heal", "Transport", "Shush", "Whisper", "Gradient"
+                    "Life", "Pasta", "B", "City", "Pearl", "Star", "Moon", "Eclipse", "Heal", "Transport", "Shush", "Whisper", "Gradient",
+                    "Syndicate", "Crew", "Townie", "Cultist"
                 ];
 
 
