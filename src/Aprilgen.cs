@@ -6,6 +6,7 @@ using Services;
 using Server.Shared.State;
 using System.Linq;
 using BetterTOS2;
+using Home.Shared;
 
 namespace Aprilgen
 {
@@ -46,13 +47,13 @@ namespace Aprilgen
         {
             private const int MaxRoleCount = 15;
 
-            private static readonly List<int> VanillaRoleIDs = [.. Enumerable.Range(1, 56)];
+            private static readonly List<int> VanillaRoleIDs = [.. Enumerable.Range(1, 56).Where(id => id != 52 && id != 53)];
             private static readonly List<int> VanillaBucketIDs = [.. Enumerable.Range(100, 18)];
 
             private static readonly List<int> BTOSRoleIDs = [.. Enumerable.Range(1, 62), 251, 252];
             private static readonly List<int> BTOSBucketIDs = [.. Enumerable.Range(100, 22)];
 
-            public static void AddRandomRoleToDeck(Random rand)
+            public static void AddRandomRoleToDeck(Random rand, bool isAll = false)
             {
                 int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.aprilgen");
                 double bucketChance = Math.Clamp(setting, 0, 100) / 100.0;
@@ -78,12 +79,14 @@ namespace Aprilgen
                     if ((isDupe || !alreadyInDeck) && !isBanned)
                     {
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
-                        Console.WriteLine($"Attempted to add role {roleID} to the role deck.");
+                        Console.WriteLine($"Attempted to add role {(Role)roleID} to the role deck.");
+                        if (!isAll || ModSettings.GetBool("Send Standalone Feedback with /randomall", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add [[#{roleID}]] to the role deck.", "info", false);
                         return;
                     }
                 }
 
                 Console.WriteLine("Failed to add a valid random role after multiple attempts.");
+                Utils.AddFeedbackMsg("Failed to add a valid random role after multiple attempts.", "critical");
             }
 
 
@@ -118,7 +121,7 @@ namespace Aprilgen
 
             private static readonly List<int> BTOSModifierIDs = [.. Enumerable.Range(201, 31)];
 
-            public static void AddRandomModifierToDeck(Random rand)
+            public static void AddRandomModifierToDeck(Random rand, bool isAll = false)
             {
                 var validModifierIDs = Utils.IsBTOS2() ? BTOSModifierIDs : VanillaModifierIDs;
                 int attempts = 0;
@@ -133,12 +136,19 @@ namespace Aprilgen
                     if (currentModifiers.Contains(roleID))
                         continue;
 
+                    Role role = (Role)roleID;
+
+                    string modifierText = role.ToDisplayString();
+
                     Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
-                    Console.WriteLine($"Attempted to add modifier {roleID} to the role deck.");
+                    Console.WriteLine($"Attempted to add modifier {modifierText} to the role deck.");
+                    if (!isAll || ModSettings.GetBool("Send Standalone Feedback with /randomall", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to add modifier {modifierText} to the role deck.", "info", false);
                     return;
                 }
 
                 Console.WriteLine("Failed to add a valid random modifier after multiple attempts.");
+                Utils.AddFeedbackMsg("Failed to add a valid random modifier after multiple attempts.", "critical");
+
             }
 
             public override Tuple<bool, string> Execute(string[] args)
@@ -168,11 +178,11 @@ namespace Aprilgen
         {
             private const int MaxBanCount = 3;
 
-            private static readonly List<int> VanillaRoleIDs = [.. Enumerable.Range(1, 56)];
+            private static readonly List<int> VanillaRoleIDs = [.. Enumerable.Range(1, 56).Where(id => id != 52 && id != 53)];
 
             private static readonly List<int> BTOSRoleIDs = [.. Enumerable.Range(1, 62)];
 
-            public static void BanRandomRoleFromDeck(Random rand)
+            public static void BanRandomRoleFromDeck(Random rand, bool isAll = false)
             {
                 var validRoleIDs = Utils.IsBTOS2() ? BTOSRoleIDs : VanillaRoleIDs;
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
@@ -189,11 +199,13 @@ namespace Aprilgen
                     {
                         Service.Game.Sim.simulation.AddBannedRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to ban role {roleID} from the role deck.");
+                        if (!isAll || ModSettings.GetBool("Send Standalone Feedback with /randomall", "loonie.aprilgen")) Utils.AddFeedbackMsg($"Attempted to ban [[#{roleID}]] from the role deck.", "info", false);
                         return;
                     }
                 }
 
                 Console.WriteLine("Failed to ban a valid random role after multiple attempts.");
+                Utils.AddFeedbackMsg($"Failed to ban a valid random role after multiple attempts.", "critical");
             }
 
 
@@ -272,13 +284,13 @@ namespace Aprilgen
                     banCount = Math.Clamp(parsedBans, 0, maxBans);
 
                 for (int i = 0; i < modifierCount; i++)
-                    ModifierCommand.AddRandomModifierToDeck(random);
+                    ModifierCommand.AddRandomModifierToDeck(random, true);
 
                 for (int i = 0; i < roleCount; i++)
-                    RoleCommand.AddRandomRoleToDeck(random);
+                    RoleCommand.AddRandomRoleToDeck(random, true);
 
                 for (int i = 0; i < banCount; i++)
-                    BanCommand.BanRandomRoleFromDeck(random);
+                    BanCommand.BanRandomRoleFromDeck(random, true);
 
                 string[] titles =
                 [
@@ -403,19 +415,23 @@ namespace Aprilgen
                 int maxCompliance = ModSettings.GetInt("Compliance Cap", "loonie.aprilgen");
 
 
-                if (apocInDeck > 1 && !Utils.IsBTOS2())
+                if (apocInDeck > 1 && !Utils.IsBTOS2() && !Utils.ModifierExists(Role.FOUR_HORSEMEN))
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.FOUR_HORSEMEN);
+                    Utils.AddFeedbackMsg($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.", "warning", false);
                     Console.WriteLine($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.");
+                    
                 }
-                if (pandoraInDeck > maxPandora && Utils.IsBTOS2())
+                if (pandoraInDeck > maxPandora && Utils.IsBTOS2() && !Utils.ModifierExists(RoleBTOS.PANDORAS_BOX))
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.PANDORAS_BOX);
+                    Utils.AddFeedbackMsg($"Found up to {pandoraInDeck} Pandora members when Pandora can have up to {maxPandora} members, so we removed the Pandora's Box modifier.", "warning", false);
                     Console.WriteLine($"Found up to {pandoraInDeck} Pandora members when Pandora can have up to {maxPandora} members, so we removed the Pandora's Box modifier.");
                 }
-                if (complianceInDeck > maxCompliance && Utils.IsBTOS2()) 
+                if (complianceInDeck > maxCompliance && Utils.IsBTOS2() && !Utils.ModifierExists(RoleBTOS.COMPLIANT_KILLERS)) 
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.COMPLIANT_KILLERS);
+                    Utils.AddFeedbackMsg($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.", "warning", false);
                     Console.WriteLine($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.");
                 }
 

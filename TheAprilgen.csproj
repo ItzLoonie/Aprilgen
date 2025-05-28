@@ -47,6 +47,10 @@
       <HintPath>.\libs\UnityEngine.dll</HintPath>
     </Reference>
 	  
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>.\libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+	  
 	<Reference Include="SalemModLoader">
       <HintPath>.\libs\SalemModLoader.dll</HintPath>
     </Reference>

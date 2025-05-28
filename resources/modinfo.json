@@ -3,7 +3,7 @@
     "DisplayName": "Aprilgen",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
-    "Version": "0.2.0",
+    "Version": "0.2.1",
     "RequiredMods": [ "voidbehemoth.commandlib" ],
     "Settings": {
         "IntegerInputSettings":
@@ -57,6 +57,12 @@
         ],
         "CheckboxSettings":
         [
+            {
+                "Name": "Send Standalone Feedback with /randomall",
+                "Description": "Sends the feedback messages that send with /randomrole, /randomban, and /randommodifier when you run /randomall. This can spam chat.",
+                "DefaultValue": false,
+                "AvailableInGame": true
+            },
             {
                 "Name": "Randomize Lobby Info",
                 "Description": "Randomizes the lobby name and icon when running /randomall.",
