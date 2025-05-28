@@ -53,7 +53,7 @@ namespace Aprilgen
             private static readonly List<int> BTOSRoleIDs = [.. Enumerable.Range(1, 62), 251, 252];
             private static readonly List<int> BTOSBucketIDs = [.. Enumerable.Range(100, 22)];
 
-            public static void AddRandomRoleToDeck(Random rand, bool sendFeedback = true)
+            public static int? AddRandomRoleToDeck(Random rand, bool sendFeedback = true)
             {
                 int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.aprilgen");
                 double bucketChance = Math.Clamp(setting, 0, 100) / 100.0;
@@ -81,13 +81,15 @@ namespace Aprilgen
                         Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to add role {(Role)roleID} to the role deck.");
                         if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to add [[#{roleID}]] to the role deck.", "info", false);
-                        return;
+                        return roleID;
                     }
                 }
 
                 Console.WriteLine("Failed to add a valid random role after multiple attempts.");
-                Utils.AddFeedbackMsg("Failed to add a valid random role after multiple attempts.", "critical");
+                if (sendFeedback) Utils.AddFeedbackMsg("Failed to add a valid random role after multiple attempts.", "critical");
+                return null;
             }
+
 
 
             public override Tuple<bool, string> Execute(string[] args)
@@ -101,11 +103,39 @@ namespace Aprilgen
 
                 for (int i = 0; i < count; i++)
                 {
-                    AddRandomRoleToDeck(random);
+                    AddRandomRoleToDeck(random, sendFeedback: true);
                 }
 
                 return new Tuple<bool, string>(true, $"Attempted to add {count} random roles to the role deck.");
             }
+
+            public static void AddRandomRolesToDeckBundled(Random rand, int count)
+            {
+                var addedRoles = new List<int>();
+                int failedCount = 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    int? addedRole = AddRandomRoleToDeck(rand, false); // call existing method with no feedback
+                    if (addedRole.HasValue)
+                        addedRoles.Add(addedRole.Value);
+                    else
+                        failedCount++;
+                }
+
+                if (addedRoles.Count > 0)
+                {
+                    string list = string.Join(", ", addedRoles.Select(id => $"[[#{id}]]"));
+                    Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
+                }
+
+                if (failedCount > 0)
+                {
+                    Utils.AddFeedbackMsg($"Failed to add a valid random role after multiple attempts {failedCount} times.", "critical");
+                }
+            }
+
+
 
             public string GetHelpMessage()
             {
@@ -119,9 +149,9 @@ namespace Aprilgen
 
             private static readonly List<int> VanillaModifierIDs = [.. Enumerable.Range(201, 14)];
 
-            private static readonly List<int> BTOSModifierIDs = [.. Enumerable.Range(201, 31)];
+            private static readonly List<int> BTOSModifierIDs = [.. Enumerable.Range(201, 30).Where(id => id != 215 && id != 218 && id != 223)];
 
-            public static void AddRandomModifierToDeck(Random rand, bool sendFeedback = true)
+            public static int? AddRandomModifierToDeck(Random rand, bool sendFeedback = true)
             {
                 var validModifierIDs = Utils.IsBTOS2() ? BTOSModifierIDs : VanillaModifierIDs;
                 int attempts = 0;
@@ -137,18 +167,43 @@ namespace Aprilgen
                         continue;
 
                     Role role = (Role)roleID;
-
                     string modifierText = role.ToDisplayString();
 
-                    Service.Game.Sim.simulation.AddRoleToRoleDeck((Role)roleID);
+                    Service.Game.Sim.simulation.AddRoleToRoleDeck(role);
                     Console.WriteLine($"Attempted to add modifier {modifierText} to the role deck.");
                     if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to add modifier {modifierText} to the role deck.", "info", false);
-                    return;
+                    return roleID;  // Return added modifier ID
                 }
 
                 Console.WriteLine("Failed to add a valid random modifier after multiple attempts.");
                 Utils.AddFeedbackMsg("Failed to add a valid random modifier after multiple attempts.", "critical");
+                return null;
+            }
+            public static void AddRandomModifiersBundled(Random rand, int count)
+            {
+                var addedModifiers = new List<int>();
+                int failedCount = 0;
 
+                for (int i = 0; i < count; i++)
+                {
+                    int? modifierID = AddRandomModifierToDeck(rand, false);  // no feedback per call
+                    if (modifierID.HasValue)
+                        addedModifiers.Add(modifierID.Value);
+                    else
+                        failedCount++;
+                }
+
+                if (addedModifiers.Count > 0)
+                {
+                    var names = addedModifiers.Select(id => ((Role)id).ToDisplayString());
+                    string list = string.Join(", ", names);
+                    Utils.AddFeedbackMsg($"Attempted to add: {list}", "info", false);
+                }
+
+                if (failedCount > 0)
+                {
+                    Utils.AddFeedbackMsg($"Failed to add a valid random modifier after multiple attempts {failedCount} times.", "critical");
+                }
             }
 
             public override Tuple<bool, string> Execute(string[] args)
@@ -160,13 +215,11 @@ namespace Aprilgen
                     count = Math.Clamp(parsedCount, 1, MaxModifierCount);
                 }
 
-                for (int i = 0; i < count; i++)
-                {
-                    AddRandomModifierToDeck(random);
-                }
+                AddRandomModifierToDeck(random);
 
                 return new Tuple<bool, string>(true, $"Attempted to add {count} random modifiers to the role deck.");
             }
+
 
             public string GetHelpMessage()
             {
@@ -182,7 +235,7 @@ namespace Aprilgen
 
             private static readonly List<int> BTOSRoleIDs = [.. Enumerable.Range(1, 62)];
 
-            public static void BanRandomRoleFromDeck(Random rand, bool sendFeedback = true)
+            public static int? BanRandomRoleFromDeck(Random rand, bool sendFeedback = true)
             {
                 var validRoleIDs = Utils.IsBTOS2() ? BTOSRoleIDs : VanillaRoleIDs;
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
@@ -194,22 +247,45 @@ namespace Aprilgen
                 {
                     int roleID = validRoleIDs[rand.Next(validRoleIDs.Count)];
 
-                    // Only ban roles not in the deck and not already banned
                     if (!currentRoles.Contains(roleID) && !currentBans.Contains(roleID))
                     {
                         Service.Game.Sim.simulation.AddBannedRoleToRoleDeck((Role)roleID);
                         Console.WriteLine($"Attempted to ban role {roleID} from the role deck.");
                         if (sendFeedback) Utils.AddFeedbackMsg($"Attempted to ban [[#{roleID}]] from the role deck.", "info", false);
-                        return;
+                        return roleID;  // Return the banned role ID
                     }
                 }
 
                 Console.WriteLine("Failed to ban a valid random role after multiple attempts.");
                 Utils.AddFeedbackMsg($"Failed to ban a valid random role after multiple attempts.", "critical");
+                return null;  // Indicate failure
             }
 
+            public static void BanRandomRolesBundled(Random rand, int count)
+            {
+                var bannedRoles = new List<int>();
+                int failedCount = 0;
 
+                for (int i = 0; i < count; i++)
+                {
+                    int? bannedRole = BanRandomRoleFromDeck(rand, false);  // no individual feedback
+                    if (bannedRole.HasValue)
+                        bannedRoles.Add(bannedRole.Value);
+                    else
+                        failedCount++;
+                }
 
+                if (bannedRoles.Count > 0)
+                {
+                    string list = string.Join(", ", bannedRoles.Select(id => $"[[#{id}]]"));
+                    Utils.AddFeedbackMsg($"Attempted to ban: {list}", "info", false);
+                }
+
+                if (failedCount > 0)
+                {
+                    Utils.AddFeedbackMsg($"Failed to ban a valid random role after multiple attempts {failedCount} times.", "critical");
+                }
+            }
             public override Tuple<bool, string> Execute(string[] args)
             {
                 int count = 1;
@@ -219,10 +295,7 @@ namespace Aprilgen
                     count = Math.Clamp(parsedCount, 1, MaxBanCount);
                 }
 
-                for (int i = 0; i < count; i++)
-                {
-                    BanRandomRoleFromDeck(random);
-                }
+                BanRandomRoleFromDeck(random);
 
                 return new Tuple<bool, string>(true, $"Attempted to ban {count} random roles from the role deck.");
             }
@@ -284,14 +357,9 @@ namespace Aprilgen
                 if (args.Length > 2 && int.TryParse(args[2], out int parsedBans))
                     banCount = Math.Clamp(parsedBans, 0, maxBans);
 
-                for (int i = 0; i < modifierCount; i++)
-                    ModifierCommand.AddRandomModifierToDeck(random, false);
-
-                for (int i = 0; i < roleCount; i++)
-                    RoleCommand.AddRandomRoleToDeck(random, false);
-
-                for (int i = 0; i < banCount; i++)
-                    BanCommand.BanRandomRoleFromDeck(random, false);
+                ModifierCommand.AddRandomModifiersBundled(random, modifierCount);
+                RoleCommand.AddRandomRolesToDeckBundled(random, roleCount);
+                BanCommand.BanRandomRolesBundled(random, banCount);
 
                 string[] titles =
                 [
