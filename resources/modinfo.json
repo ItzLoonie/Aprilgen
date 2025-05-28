@@ -3,7 +3,7 @@
     "DisplayName": "Aprilgen",
     "Authors": [ "Loonie" ],
     "Description": "Adds randomized role list generation to Custom!",
-    "Version": "0.2.2",
+    "Version": "0.2.3",
     "RequiredMods": [ "voidbehemoth.commandlib" ],
     "Settings": {
         "IntegerInputSettings":
@@ -57,6 +57,13 @@
         ],
         "CheckboxSettings":
         [
+            {
+                "Name": "Send Command Feedback",
+                "Description": "If enabled, commands will send feedback messages. Disabling this does not disable the feedback message for clearing a deck or generating a deck.",
+                "DefaultValue": false,
+                "AvailableInGame": true
+            },
+
             {
                 "Name": "Randomize Lobby Info",
                 "Description": "Randomizes the lobby name and icon when running /randomall.",

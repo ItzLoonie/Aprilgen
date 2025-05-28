@@ -57,6 +57,7 @@ namespace Aprilgen
             {
                 int setting = ModSettings.GetInt("Role Bucket Chance", "loonie.aprilgen");
                 double bucketChance = Math.Clamp(setting, 0, 100) / 100.0;
+                sendFeedback = ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen");
 
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
                 var currentBans = Service.Game.Sim.simulation.roleDeckBuilder.Data.bannedRoles.Select(role => (int)role).ToHashSet();
@@ -103,7 +104,7 @@ namespace Aprilgen
 
                 for (int i = 0; i < count; i++)
                 {
-                    AddRandomRoleToDeck(random, sendFeedback: true);
+                    AddRandomRoleToDeck(random);
                 }
 
                 return new Tuple<bool, string>(true, $"Attempted to add {count} random roles to the role deck.");
@@ -156,6 +157,7 @@ namespace Aprilgen
                 var validModifierIDs = Utils.IsBTOS2() ? BTOSModifierIDs : VanillaModifierIDs;
                 int attempts = 0;
                 const int maxAttempts = 50;
+                sendFeedback = ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen");
 
                 var currentModifiers = Service.Game.Sim.simulation.roleDeckBuilder.Data.modifierCards.Select(role => (int)role).ToHashSet();
 
@@ -240,6 +242,7 @@ namespace Aprilgen
                 var validRoleIDs = Utils.IsBTOS2() ? BTOSRoleIDs : VanillaRoleIDs;
                 var currentRoles = Service.Game.Sim.simulation.roleDeckBuilder.Data.roles.Select(role => (int)role).ToList();
                 var currentBans = Service.Game.Sim.simulation.roleDeckBuilder.Data.bannedRoles.Select(role => (int)role).ToHashSet();
+                sendFeedback = ModSettings.GetBool("Send Command Feedback", "loonie.aprilgen");
 
                 const int maxAttempts = 50;
 
@@ -487,22 +490,24 @@ namespace Aprilgen
                 if (apocInDeck > 1 && !Utils.IsBTOS2() && !Utils.ModifierExists(Role.FOUR_HORSEMEN))
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(Role.FOUR_HORSEMEN);
-                    Utils.AddFeedbackMsg($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.", "warning", false);
+                    Utils.AddFeedbackMsg($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.", "critical", false);
                     Console.WriteLine($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.");
                     
                 }
                 if (pandoraInDeck > maxPandora && Utils.IsBTOS2() && !Utils.ModifierExists(RoleBTOS.PANDORAS_BOX))
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.PANDORAS_BOX);
-                    Utils.AddFeedbackMsg($"Found up to {pandoraInDeck} Pandora members when Pandora can have up to {maxPandora} members, so we removed the Pandora's Box modifier.", "warning", false);
+                    Utils.AddFeedbackMsg($"Found up to {pandoraInDeck} Pandora members when Pandora can have up to {maxPandora} members, so we removed the Pandora's Box modifier.", "critical", false);
                     Console.WriteLine($"Found up to {pandoraInDeck} Pandora members when Pandora can have up to {maxPandora} members, so we removed the Pandora's Box modifier.");
                 }
                 if (complianceInDeck > maxCompliance && Utils.IsBTOS2() && !Utils.ModifierExists(RoleBTOS.COMPLIANT_KILLERS)) 
                 {
                     Service.Game.Sim.simulation.RemoveRoleFromRoleDeck(RoleBTOS.COMPLIANT_KILLERS);
-                    Utils.AddFeedbackMsg($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.", "warning", false);
+                    Utils.AddFeedbackMsg($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.", "critical", false);
                     Console.WriteLine($"Found up to {complianceInDeck} Compliance members when Compliance can have up to {maxCompliance} members, so we removed the Compliant Killers modifier.");
                 }
+
+                Utils.AddFeedbackMsg("Generated a role deck.");
 
                 return new Tuple<bool, string>(true,
                     $"Attempted to add {roleCount} roles, {modifierCount} modifiers, and ban {banCount} roles.");
