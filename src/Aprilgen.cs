@@ -494,6 +494,8 @@ namespace Aprilgen
                 int maxCompliance = ModSettings.GetInt("Compliance Cap", "loonie.aprilgen");
 
 
+                if (apocInDeck > 1 && !Utils.IsBTOS2() && !Utils.ModifierExists(Role.FOUR_HORSEMEN))
+                {
                     Service.Game.Sim.simulation.AddRoleToRoleDeck(Role.FOUR_HORSEMEN);
                     Utils.AddFeedbackMsg($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.", "critical", false);
                     Console.WriteLine($"Found up to {apocInDeck} Apocalypse members when Apocalypse is capped at 1, so we added the Four Horsemen modifier.");
